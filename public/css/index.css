@@ -1,0 +1,430 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #f7f7f7;
+}
+
+#header-top {
+    height: 50px;
+    background: #282e9e;
+    border-bottom: 1px solid white;
+}
+
+#header-bottom {
+    height: 76px;
+    background: #115bc3;
+}
+
+#menu-total-cart {
+    margin-left: 40px;
+    position: absolute;
+    z-index: 4;
+}
+
+#img_user_info {
+    height: 80px;
+    width: 80px;
+}
+
+/* ảnh slide  */
+#carousel-img-slide {
+    width: 100%;
+    height: 475px;
+}
+
+/* Phần Blog  */
+
+/* Sản phẩm */
+#list-group-item {
+    height: 100px;
+    width: 100%;
+}
+
+div #mane-product {
+    display: block;
+    color: #333;
+    line-height: 24px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -moz-line-clamp: 1;
+    -o-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    -o-box-orient: vertical;
+    max-height: 100%;
+    overflow: hidden;
+    margin-bottom: 2px;
+}
+
+.list-product {
+    width: 200px;
+    height: 280px;
+    background-color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.add-list a {
+    padding: 15px 9px;
+    text-decoration: none;
+    border-radius: 50%;
+    background-color: white;
+    color: black;
+}
+
+.add-list button {
+    height: 52px;
+    width: 52px;
+    border: none;
+    background-color: white;
+}
+
+.add-list button:hover {
+    background-color: gold;
+    color: red;
+}
+
+.add-list a:hover {
+    background-color: gold;
+    color: red;
+}
+
+.add-list {
+    padding: 80px 0;
+    width: 100%;
+    height: 200px;
+    position: absolute;
+    background: rgba(213, 7, 7, 0.6);
+    top: -200px;
+}
+
+.type-product {
+    display: none;
+    background-color: darkorange;
+}
+
+.list-product:hover .type-product {
+    display: block;
+    display: flex;
+    position: absolute;
+    width: 100%;
+    height: 30px;
+    top: 170px;
+}
+
+.list-product:hover .add-list {
+    top: 0;
+    transition: 1s ease;
+}
+
+.pagging {
+    height: 30px;
+    display: flex;
+    list-style: none;
+    justify-content: center;
+}
+
+.pagging li a {
+    text-decoration: none;
+    color: black;
+    padding: 6px 15px;
+    border: 1px solid black;
+    margin: 0 5px;
+}
+
+.active a {
+    background-color: red;
+    color: white;
+}
+
+#text-price {
+    justify-content: space-between;
+    position: absolute;
+    bottom: -10px;
+    width: 100%;
+}
+
+#img-product-size {
+    height: 200px;
+    width: auto;
+}
+
+/* Phần detail product  */
+
+#header-product {
+    min-height: 506px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 60px 0 rgba(103, 151, 255, .11), 0 12px 90px 0 rgba(103, 151, 255, .11);
+}
+
+
+#thumb-now-parent {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#thumb-now:hover #btn-img-prev {
+    display: block;
+}
+
+#thumb-now:hover #btn-img-next {
+    display: block;
+}
+
+#thumb-img-now {
+    height: 326px;
+}
+
+#btn-img-prev {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    display: none;
+}
+
+#btn-img-next {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    display: none;
+}
+
+#ride-thumb {
+    height: 70px;
+    width: 70px;
+    object-fit: cover;
+}
+
+#ride-thumb:hover {
+    border: 1px solid red;
+}
+
+#slick-slider {
+    overflow: hidden;
+    display: flex;
+    width: 1110px;
+    margin: auto;
+}
+
+.child-img {
+    display: flex;
+    justify-content: center;
+    gap: 2%;
+}
+
+#category-same {
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+/* Phần thuộc tính màu sắc sản phẩm chi tiết */
+#product-color-detail {
+    display: flex;
+    min-height: 60px;
+    width: 100%;
+    gap: 30px;
+}
+
+.color-variant {
+    height: 70px;
+    display: flex;
+    flex-direction: column;
+}
+
+.color_specifier {
+    border: 1px solid black;
+    height: 30px;
+}
+
+.color_specifier input {
+    display: none;
+}
+
+/* Phần bình luận */
+#item-comment {
+    border-bottom: 1px solid lightgrey;
+    margin-top: 5px;
+}
+
+#item-comment:last-child {
+    border-bottom: none;
+    margin-top: 5px;
+}
+
+#header-comment {
+    display: flex;
+}
+
+#img-user-comment {
+    height: 30px;
+}
+
+#list_comment {
+    max-height: 500px;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+/* Phần đánh giá SAO */
+.star-widget {
+    margin-right: 92%;
+}
+
+.star-widget input {
+    display: none;
+}
+
+.star-widget label {
+    float: right;
+    color: lightgrey;
+    font-size: 20px;
+}
+
+.star-widget input:checked~label {
+    color: gold;
+}
+
+.star-widget label::before {
+    content: '★';
+}
+
+/* Phần đánh giá */
+#evaluation {
+    display: flex;
+    height: 300px;
+}
+
+#evaluation-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Phần menu  */
+.list-item li {
+    list-style: none;
+}
+
+.list-item li {
+    position: relative;
+    z-index: 4;
+}
+
+.list-item li:hover>.sub-menu {
+    display: block;
+}
+
+.sub-menu {
+    z-index: 4;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    display: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sub-menu li {
+    width: 255px;
+    height: 49.5px;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, .125);
+}
+
+.sub-menu li a {
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    /* line-height: 49.5px; */
+    color: #495057;
+    margin: auto;
+}
+
+#img_order_info img {
+    width: 20px;
+    height: 40px;
+}
+
+/* Phần user */
+#size-img-thumb {
+    height: 50px;
+    width: 50px;
+}
+
+/* Phần Chat box  */
+#chat-box {
+    min-height: 400px;
+    width: 600px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 20px 20px;
+}
+
+#chat-header {
+    background-color: white;
+    padding: 25px 30px;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 20px 20px 0px 0px;
+}
+
+.typing-area {
+    background-color: white;
+    padding: 18px 30px;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 0px 0px 20px 20px;
+}
+
+.typing-area input {
+    height: 45px;
+    width: calc(100% - 58px);
+    font-size: 16px;
+    border: 1px solid #e6e6e6;
+    outline: none;
+    border-radius: 5px 0 0 5px;
+}
+
+.chat-content {
+    position: relative;
+    height: 500px;
+    overflow-y: auto;
+    padding: 10px 30px 20px 30px;
+    background: #f7f7f7;
+    box-shadow: inset 0 32px 32px -32px rgb(0 0 0 / 5%),
+        inset 0 32px 32px -32px rgb(0 0 0 / 5%);
+}
+
+#chat-header img {
+    height: 50px;
+    width: 50px;
+}
+
+.chat-content-item-left {
+    padding: 13px 15px;
+    min-height: 40px;
+    min-width: 30px;
+    border: 1px solid #e6e6e6;
+    background-color: white;
+    border-radius: 20px 20px 20px 0px;
+    margin-bottom: 5px;
+    clear: both;
+}
+
+.chat-content-item-right {
+    padding: 13px 15px;
+    min-height: 40px;
+    min-width: 30px;
+    background-color: rgb(20, 14, 14);
+    border-radius: 20px 20px 0px 20px;
+    color: white;
+    margin-bottom: 5px;
+    clear: both;
+}

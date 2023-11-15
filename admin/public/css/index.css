@@ -1,0 +1,149 @@
+* {
+    margin: 0;
+    padding: 0
+}
+
+#logo {
+    height: 70px;
+    line-height: 70px;
+}
+
+#content {
+    min-height: 700px;
+}
+
+#logo img {
+    height: 50px;
+}
+
+/* Phần menu  */
+.list-menu {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    z-index: 4;
+    position: relative;
+    height: 70px;
+    line-height: 70px;
+    text-align: center;
+}
+
+.list-menu li {
+    width: 100%;
+}
+
+.list-menu li:hover {
+    transition: 1s ease-in-out;
+    background-color: orange;
+}
+
+.sub-menu {
+    display: none;
+}
+
+.sub-menu li {
+    width: 147px;
+}
+
+.sub-menu li a {
+    font-size: 13px;
+}
+
+.list-menu>li:hover>.sub-menu {
+    display: block;
+    position: absolute;
+}
+
+/* Phần sản phẩm  */
+#img-list-product {
+    height: 60px;
+}
+
+#footer {
+    bottom: 0;
+    z-index: 9999;
+    width: 100%;
+}
+
+/* Phần add sản phẩm */
+
+#size-img-thumb {
+    height: 80px;
+    width: 80px;
+}
+
+
+#text-img-thumb {
+    width: 100px;
+    height: 80px;
+}
+
+/* Phần Chat box  */
+#chat-box {
+    min-height: 400px;
+    width: 600px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 20px 20px;
+}
+
+#chat-header {
+    background-color: white;
+    padding: 25px 30px;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 20px 20px 0px 0px;
+}
+
+.typing-area {
+    background-color: white;
+    padding: 18px 30px;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 0px 0px 20px 20px;
+}
+
+.typing-area input {
+    height: 45px;
+    width: calc(100% - 58px);
+    font-size: 16px;
+    border: 1px solid #e6e6e6;
+    outline: none;
+    border-radius: 5px 0 0 5px;
+}
+
+.chat-content {
+    position: relative;
+    height: 500px;
+    overflow-y: auto;
+    padding: 10px 30px 20px 30px;
+    background: #f7f7f7;
+    box-shadow: inset 0 32px 32px -32px rgb(0 0 0 / 5%),
+        inset 0 32px 32px -32px rgb(0 0 0 / 5%);
+}
+
+#chat-header img {
+    height: 50px;
+    width: 50px;
+}
+
+.chat-content-item-left {
+    padding: 13px 15px;
+    min-height: 40px;
+    min-width: 30px;
+    border: 1px solid #e6e6e6;
+    background-color: white;
+    border-radius: 20px 20px 20px 0px;
+    margin-bottom: 5px;
+    clear: both;
+}
+
+.chat-content-item-right {
+    padding: 13px 15px;
+    min-height: 40px;
+    min-width: 30px;
+    background-color: rgb(20, 14, 14);
+    border-radius: 20px 20px 0px 20px;
+    color: white;
+    margin-bottom: 5px;
+    clear: both;
+}

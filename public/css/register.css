@@ -1,0 +1,53 @@
+body {
+    font-size: 14px;
+    font-family: arial;
+    line-height: 23px;
+    background-color: #029ef3;
+
+}
+
+#wp-form-register {
+    width: 265px;
+    background-color: white;
+    border-radius: 3px;
+    padding: 30px 20px 20px 20px;
+    margin: 150px auto;
+    text-align: center;
+}
+
+#form-register #username,
+#form-register #password,
+#form-register #email,
+#form-register #fullname, 
+#form-register #address,
+#form-register #phone_number{
+    display: block;
+    padding: 10px 10px;
+    width: 100%;
+    margin-bottom: 9px;
+    background-color: #f7f7ff;
+    border: none;
+}
+
+#form-register #btn-register {
+    display: block;
+    width: 100%;
+    background-color: #029ef3;
+    border: none;
+    color: #fff;
+    padding: 10px 0px;
+    margin: 150x 0px 10px;
+    cursor: pointer;
+}
+#lost-pass {
+    text-decoration: underline;
+    color: #67a0b7;
+}
+.page-title {
+    font-size: 18px;
+    padding: 0px 0px 20px;
+}
+.error {
+    font-size: 13px;
+    color: #e25959;
+}
