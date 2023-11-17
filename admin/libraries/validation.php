@@ -39,7 +39,7 @@ function is_file_img($data)
 {
     $duoiFile = ['jpg', 'png', 'jpeg', 'gif', 'tiff'];
     $duoiImg = pathinfo($data, PATHINFO_EXTENSION);
-    if (in_array($duoiImg, $duoiFile)) {
+    if (in_array(strtolower($duoiImg), $duoiFile)) {
         return true;
     } else {
         return false;

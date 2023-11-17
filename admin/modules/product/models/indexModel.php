@@ -83,7 +83,13 @@ function get_padding($num_rows)
 function delete_product($id) //Xóa sản phẩm theo id
 {
     db_delete("tb_products", "`product_id` = '$id'");
-    redirect("?mod=product&action=list_product");
+}
+
+function delete_related($id) //Xóa các thuộc tính liên quan đến sản phẩm theo id
+{
+    db_delete("tb_color_variants", "`product_id` = '$id'"); //Xóa biến thể màu sắc
+    db_delete("tb_memory_variants", "`product_id` = '$id'"); //Xóa biến thể dung lượng
+    db_delete("tb_image_details", "`product_id` = '$id'"); //Xóa ảnh chi tiết
 }
 
 function get_product_by_id($id) //Lấy sản phẩm theo id
@@ -149,29 +155,6 @@ function num_products_posted() //Tổng số sản phẩm đã đăng
 function num_products_pending() //Tổng số sản phẩm chờ xét duyệt
 {
     return db_num_rows("SELECT * FROM `tb_products` WHERE `status`= 'Chờ xét duyệt'");
-}
-function num_product_delete() //Tổng số sản phẩm trong danh sach đã xóa
-{
-    return db_num_rows("SELECT * FROM `tb_deleted_products`");
-}
-function add_list_delete($id) //Cập nhật vào danh sách sản phẩm đã xóa
-{
-    $item = db_fetch_row("SELECT * FROM `tb_products` WHERE `product_id` = '$id' ");
-    $data = [
-        'product_id'  => $item['product_id'],
-        'product_code' => $item['product_code'],
-        'product_name' => $item['product_name'],
-        'price' => $item['price'],
-        'product_desc' => $item['product_desc'],
-        'product_thumb' => $item['product_thumb'],
-        'product_content' => $item['product_content'],
-        'status' => "Chờ xét duyệt",
-        'cat_id' => $item['cat_id'],
-        'admin_delete' => $_SESSION['admin_login'],
-        'sales' => $item['sales'],
-        'quantity' => $item['quantity'],
-    ];
-    db_insert("tb_deleted_products", $data);
 }
 
 function get_list_cat() //Lấy danh sách danh mục sản phẩm 
@@ -300,7 +283,7 @@ function update_detail_img_by_id($key, $data_detail_img) //Cập nhật ảnh ch
     db_update("tb_image_details", $data_detail_img, "`id` = {$key}");
 }
 
-function remove_interval_detail_img($string_id, $id)//Xóa các id ảnh chi tiết nếu không tồn tại trong danh sách
+function remove_interval_detail_img($string_id, $id) //Xóa các id ảnh chi tiết nếu không tồn tại trong danh sách
 {
     db_query("DELETE FROM `tb_image_details` WHERE `id` NOT IN ($string_id) AND `product_id` = {$id}");
 }

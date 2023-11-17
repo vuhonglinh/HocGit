@@ -33,58 +33,73 @@ get_header();
                             </div>
                         </div>
                         <div class="mt-4 child-img">
-                            <img id="ride-thumb" class="img-thumbnail" src="admin/img/<?php echo $product['product_thumb'] ?>" alt="">
-                            <img id="ride-thumb" class="img-thumbnail" src="admin/img/<?php echo $product['img_detail_1'] ?>" alt="">
-                            <img id="ride-thumb" class="img-thumbnail" src="admin/img/<?php echo $product['img_detail_2'] ?>" alt="">
-                            <img id="ride-thumb" class="img-thumbnail" src="admin/img/<?php echo $product['img_detail_3'] ?>" alt="">
-                            <img id="ride-thumb" class="img-thumbnail" src="admin/img/<?php echo $product['img_detail_4'] ?>" alt="">
-                            <img id="ride-thumb" class="img-thumbnail" src="admin/img/<?php echo $product['img_detail_5'] ?>" alt="">
-                            <img id="ride-thumb" class="img-thumbnail" src="admin/img/<?php echo $product['img_detail_6'] ?>" alt="">
+                            <?php foreach ($list_img_detail as $item) : ?>
+                                <img id="ride-thumb" class="img-thumbnail" src="admin/img/<?php echo $item['image'] ?>" alt="">
+                            <?php endforeach; ?>
                         </div>
                     </div>
                     <div class="col-md-5 mt-3">
                         <form action="?mod=cart&action=add_cart&id=<?php echo $product['product_id'] ?>" method="post">
-                            <p class="h4 "><?php echo $product['product_name'] ?></p>
+                            <p class="h4" id="product_name"><?php echo $product['product_name'] ?></p>
                             <div class="pt-2 border-top">
                                 <?php echo $product['product_desc'] ?>
                             </div>
-                            <?php if (!empty($variant_color)) : ?>
-                                <span class="title">Màu sắc: </span>
-                                <div id="product-color-detail">
-                                    <?php foreach ($variant_color as $item) : ?>
-                                        <div class="color-variant">
-                                            <label for="" class="color_specifier" style="background-color: <?php echo $item['color'] ?>;">
-                                                <input class="" type="text" name="" id="">
-                                            </label>
-                                            <span class="font-weight-bold"><?php echo $item['variant_name'] ?></span>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
-                            <?php endif ?>
+                            <div class="my-3">
+                                <?php if (!empty($variant_color)) : ?>
+                                    <span class="color">Màu sắc: </span>
+                                    <select name="color" id="color">
+                                        <option value="">---Chọn---</option>
+                                        <?php foreach ($variant_color as $item) : ?>
+                                            <option <?php if ($item['quantity'] == 0) echo "disabled" ?> value="<?php echo $item['id'] ?>"><?php echo $item['color_name'] ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                <?php endif ?>
+                                <?php if (!empty($variant_ram)) : ?>
+                                    <span class="ram">Dung lượng: </span>
+                                    <select name="ram" id="ram" onchange="selectColor(this)" product_id="<?php echo $product['product_id'] ?>">
+                                        <option value="">---Chọn---</option>
+                                        <?php foreach ($variant_ram as $item) : ?>
+                                            <option <?php if ($item['quantity'] == 0) echo "disabled" ?> value="<?php echo $item['id'] ?>"><?php echo $item['nemory_name'] ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                <?php endif ?>
+                            </div>
                             <div class="num-product">
                                 <span class="title">Sản phẩm: </span>
-                                <?php if ($product['quantity'] >= 1) : ?>
-                                    <span class="bg-success text-white p-1">Còn <span id="quantity"><?php echo $product['quantity'] ?></span> sản phẩm</span>
-                                <?php else : ?>
-                                    <span class="bg-danger text-white p-1">Hết hàng</span>
-                                <?php endif; ?>
+                                <span class="bg-danger text-white p-1">Hết hàng</span>
                             </div>
-                            <p class="h3 text-danger mt-3"><?php echo currency_format($product['price']) ?></p>
-                            <div class="d-flex">
-                                <div onclick="minus()" class="border-primary"><img class="img-fluid img-thumbnail" src="img/minus-sign.png" alt=""></div>
-                                <input type="number" name="num-order" min="1" max="<?php echo $product['quantity'] ?>" value="1" id="num-order" style="width: 50px; margin: 0px 5px;" class="text-center cm-number">
-                                <div onclick="plus()" class="border-primary"><img class="img-fluid img-thumbnail" src="img/add.png" alt=""></div>
+                            <p class="h3 text-danger mt-3" id="product_price"><?php echo currency_format($product['price']) ?></p>
+                            <div class="d-flex" id="quantity">
                             </div>
-                            <?php if ($product['quantity'] >= 1) : ?>
-                                <button type="submit" title="Thêm giỏ hàng" class="btn btn-primary my-3 btn-lg">Thêm giỏ hàng</button>
-                            <?php else : ?>
-                                <a onclick="return alert('Sản phẩm hiện tại không còn hàng')" title="Thêm giỏ hàng" class="btn btn-danger my-3 btn-lg">Thêm giỏ hàng</a>
-                            <?php endif; ?>
+                            <button type="submit" title="Thêm giỏ hàng" class="btn btn-primary my-3 btn-lg">Thêm giỏ hàng</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
+        <script>
+            function selectColor(_this) {
+                var product_id = $(_this).attr("product_id");
+                var color = $("#color").val();
+                var ram = $(_this).val();
+                var data = {
+                    product_id: product_id,
+                    ram: ram,
+                    color: color
+                }
+                $.ajax({
+                    url: '?mod=product&action=detail_ajax',
+                    method: 'POST',
+                    data: data,
+                    dataType: 'json',
+                    success: function(data) {
+                        $("#product_name").html(data.product_name);
+                        $("#product_price").html(data.price);
+                        $("#quantity").html(data.quantity);
+                    }
+                })
+            }
+        </script>
         <div class="row mt-5 bg-white">
             <div class="col-md-12">
                 <nav>
@@ -177,16 +192,8 @@ get_header();
                         <div class="slide mr-4">
                             <div class="list-product text-center border border-dark rounded">
                                 <div class="add-list">
-                                    <?php if ($item['quantity'] < 1) : ?>
-                                        <button class="rounded-circle" onclick="return alert('Sản phẩm hiện tại không còn hàng')">ADD</button>
-                                    <?php else : ?>
-                                        <button onclick="addCart(event)" class="rounded-circle" id="add-cart" id_product="<?php echo $item['product_id'] ?>">ADD</button>
-                                    <?php endif; ?>
-                                    <?php if ($item['quantity'] < 1) : ?>
-                                        <a onclick="return alert('Sản phẩm hiện tại không còn hàng')">MUA</a>
-                                    <?php else : ?>
-                                        <a href="?mod=product&action=add_cart&id=<?php echo $item['product_id'] ?>">MUA</a>
-                                    <?php endif; ?>
+                                    <button onclick="addCart(event)" class="rounded-circle" id="add-cart" id_product="<?php echo $item['product_id'] ?>">ADD</button>
+                                    <a href="?mod=product&action=add_cart&id=<?php echo $item['product_id'] ?>">MUA</a>
                                 </div>
                                 <div id="img-product-size">
                                     <img class="img-fluid img-thumbnail border-0" src="admin/img/<?php echo $item['product_thumb'] ?>" alt="">

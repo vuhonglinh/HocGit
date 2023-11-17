@@ -7,7 +7,7 @@ function indexAction()
 {
 }
 
-function ajaxAction()
+function ajaxAction() //Thêm bình luận
 {
     load_module('index');
     $comment = $_POST['comment'];
@@ -24,6 +24,34 @@ function ajaxAction()
     $result = get_list_comments($id_product);
     echo json_encode($result);
 }
+
+function detail_ajaxAction()
+{
+    load_module('index');
+    $product_id = $_POST['product_id'];
+    $ram_id = $_POST['ram'];
+    $color_id = $_POST['color'];
+    $product = get_product_by_id($product_id); //Lấy chi tiết sản phẩm
+    $color = get_color_by_id($color_id); //Lấy thuộc tính màu sắc
+    $ram = get_ram_by_id($ram_id); //Lấy thuộc tính ram
+    $product_name = "{$product['product_name']} {$ram['nemory_name']} {$color['color_name']} ";
+    $price = $product['price'] + $ram['nemory_price'] + $color['color_price'];
+    if ($ram['quantity'] < $color['quantity']) { //Lấy số lượng
+        $max = $ram['quantity'];
+    } else {
+        $max = $color['quantity'];
+    }
+    $quantity = "<div onclick='minus()' class='border-primary'><img class='img-fluid img-thumbnail' src='img/minus-sign.png' alt=''></div>
+    <input type='number' name='num-order' min='1' max='{$max}' value='1' id='num-order' style='width: 50px; margin: 0px 5px;' class='text-center cm-number'>
+    <div onclick='plus()' class='border-primary'><img class='img-fluid img-thumbnail' src='img/add.png' alt=''></div>";
+    $result = [
+        'product_name' => $product_name,
+        'price' => currency_format($price),
+        'quantity' => $quantity
+    ];
+    echo json_encode($result);
+}
+
 
 function mainAction()
 {
@@ -62,8 +90,9 @@ function detailAction()
 {
     load_module('index');
     $id = $_GET['id'];
-    //Lấy biến thể màu sắc
+    //Lấy biến thể
     $data['variant_color'] = get_variant_color($id);
+    $data['variant_ram'] = get_variant_ram($id);
     //Tổng số lượng đánh giá sao theo thư hạng
     $data['star_5'] = num_product_star_5($id);
     $data['star_4'] = num_product_star_4($id);
@@ -73,13 +102,14 @@ function detailAction()
     //
     $data['star'] = product_star_by_id($id); //Lấy tb đánh giá sao
     $data['count'] = total_comments($id); //Lấy tông số bình luận và đánh giá sp
-    $data['product'] = get_product_by_id($id);
+    $data['product'] = get_product_by_id($id); //Lấy chi tiết sản phẩm
+    $data['list_img_detail'] = get_img_detail_by_id($id); //Lấy chi tiết sản phẩm
     $data['comments'] = get_list_comments($id);
     //Share sản phẩm
-    $data['product_share'] = [
-        'url' =>  base_url("san-pham/chi-tiet/" . create_slug($data['product']['product_name']) . "/" . $id . ".html"),
-        'img' => 'anhdienthoaij.jpg',
-    ];
+    // $data['product_share'] = [
+    //     'url' =>  base_url("san-pham/chi-tiet/" . create_slug($data['product']['product_name']) . "/" . $id . ".html"),
+    //     'img' => 'anhdienthoaij.jpg',
+    // ];
     load_view('detail', $data);
 }
 function add_cartAction()

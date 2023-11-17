@@ -35,7 +35,7 @@ get_sidebar();
 
                             <h3 class="profile-username text-center"><?php echo info_login() ?></h3>
 
-                            <p class="text-muted text-center">Quản trị viên</p>
+                            <p class="text-muted text-center"><?php echo $info_user['role_name'] ?></p>
 
                             <ul class="list-group list-group-unbordered mb-3">
                                 <li class="list-group-item">
@@ -66,8 +66,7 @@ get_sidebar();
                                 <th>Tên đăng nhập</th>
                                 <th>Email</th>
                                 <th>Số điện thoại</th>
-                                <th>Địa chỉ</th>
-                                <th>Thao tác</th>
+                                <th colspan="2">Phòng ban</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -81,7 +80,7 @@ get_sidebar();
                                         <td><?php echo $item['username']; ?></td>
                                         <td><?php echo $item['email']; ?></td>
                                         <td><?php echo $item['phone_number']; ?></td>
-                                        <td><?php echo $item['address']; ?></td>
+                                        <td><?php echo $item['role_name']; ?></td>
                                         <td>
                                             <a href="?mod=users&controller=team&action=update&id=<?php echo $item['user_id'] ?>" title="Sửa"><img src="public/img/pen (1).png" alt=""></a>
                                             <a onclick="return confirm('Bạn chắc muốn xóa sản không')" class="ml-4" href="?mod=users&controller=team&action=delete&id=<?php echo $item['user_id'] ?>" title="Xóa"><img src="public/img/delete1.png" alt=""></a>

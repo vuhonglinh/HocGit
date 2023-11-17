@@ -35,7 +35,7 @@ get_sidebar();
 
                             <h3 class="profile-username text-center"><?php echo info_login() ?></h3>
 
-                            <p class="text-muted text-center">Quản trị viên</p>
+                            <p class="text-muted text-center"><?php echo $info_user['role_name'] ?></p>
 
                             <ul class="list-group list-group-unbordered mb-3">
                                 <li class="list-group-item">

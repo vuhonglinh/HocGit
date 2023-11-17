@@ -11,6 +11,7 @@ function indexAction()
     $start = ($page - 1) * $num_rows;
     $list_users = get_list_users($start, $num_rows);
     $data['list_users'] = $list_users;
+    $data['info_user'] = get_user_by_username(user_login());
     load_view('teamindex', $data);
 }
 
@@ -78,6 +79,12 @@ function addAction()
         } else {
             $address = $_POST['address'];
         }
+        //Kiểm tra role
+        if (empty($_POST['role'])) {
+            $error['role'] = "Không được để trống";
+        } else {
+            $role = $_POST['role'];
+        }
         //Kết luận
         if (empty($error)) {
             if (exits_user($username, $email)) {
@@ -89,6 +96,7 @@ function addAction()
                     'phone_number' => $tel,
                     'address' => $address,
                     'creator' => $_SESSION['admin_login'],
+                    'role_id' => $role,
                 ];
                 add_users($data);
                 $error['account'] = "Thêm thành công";
@@ -97,7 +105,9 @@ function addAction()
             }
         }
     }
-    load_view("add");
+    $data['list_roles'] = list_roles(); //Lấy danh sách phân quyền
+    $data['info_user'] = get_user_by_username(user_login());
+    load_view("add", $data);
 }
 
 function updateAction()
@@ -105,6 +115,7 @@ function updateAction()
     global $error, $fullname, $username, $password, $email, $address, $phone_number;
     $id = $_GET['id'];
     $data['user'] = get_user_by_id($id);
+    $data['list_roles'] = list_roles(); //Danh sách phân quyền
     if (isset($_POST['update_user'])) {
         if (empty($_POST['fullname'])) {
             $error['fullname'] = "Không được để trống";
@@ -157,6 +168,12 @@ function updateAction()
         } else {
             $address = $_POST['address'];
         }
+        //Kiểm tra role
+        if (empty($_POST['role'])) {
+            $error['role'] = "Không được để trống";
+        } else {
+            $role = $_POST['role'];
+        }
         //Kết luận
         if (empty($error)) {
             $data_user = [
@@ -166,11 +183,13 @@ function updateAction()
                 'address' => $address,
                 // 'username' => $username,
                 'phone_number' => $phone_number,
+                'role_id' => $role,
             ];
             update_user($data_user, $id);
             $error['account'] = "Cập nhật thành công";
         }
     }
     $data['user'] = get_user_by_id($id);
+    $data['list_roles'] = list_roles(); //Danh sách phân quyền
     load_view("update_team", $data);
 }

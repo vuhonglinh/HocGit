@@ -23,42 +23,11 @@ get_sidebar();
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
+            <div class="col-sm-6">
+                <h4>Cập nhật thông tin quản trị viên</h4>
+            </div>
             <div class="row">
-                <div class="col-md-3">
-
-                    <!-- Profile Image -->
-                    <div class="card card-primary card-outline">
-                        <div class="card-body box-profile">
-                            <div class="text-center">
-                                <img class="profile-user-img img-fluid img-circle" src="public/img/admin.png" alt="User profile picture">
-                            </div>
-
-                            <h3 class="profile-username text-center"><?php echo info_login() ?></h3>
-
-                            <p class="text-muted text-center">Quản trị viên</p>
-
-                            <ul class="list-group list-group-unbordered mb-3">
-                                <li class="list-group-item">
-                                    <b>Tên đăng nhập</b> <a class="float-right"><?php echo info_login('username') ?></a>
-                                </li>
-                                <li class="list-group-item">
-                                    <b>Số điện thoại</b> <a class="float-right"><?php echo info_login('phone_number') ?></a>
-                                </li>
-                                <li class="list-group-item">
-                                    <b>Email</b> <a class="float-right"><?php echo info_login('email') ?></a>
-                                </li>
-                            </ul>
-                            <?php get_sidebar("admin") ?>
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
-                </div>
-                <!-- /.col -->
-                <div class="col-md-9">
-                    <div class="col-sm-6">
-                        <h1>Cập nhật</h1>
-                    </div>
+                <div class="col-md-12">
                     <div class="tab-pane active p-2 bg-white" id="settings">
                         <form method="POST" class="form-group ">
                             <label for="fullname">Tên hiển thị</label>
@@ -84,6 +53,16 @@ get_sidebar();
                             <label for="address">Địa chỉ</label>
                             <textarea name="address" id="address" class="form-inline form-control"><?php echo $user['address'] ?></textarea>
                             <?php echo form_error('address') ?>
+
+                            <label for="role">Phòng ban</label>
+                            <select class="form-control" name="role" id="role">
+                                <option value="">---Chọn---</option>
+                                <?php foreach ($list_roles as  $value) : ?>
+                                    <option <?php if ($user['role_id'] == $value['id']) echo "selected"; ?> <?php echo ($value['id'] == 0) ? "disabled" : "" ?> value="<?php echo $value['id'] ?>"><?php echo $value['role_name'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php echo form_error('role') ?>
+
 
                             <button type="submit" name="update_user" id="btn-submit" class="btn btn-primary btn-lg mt-3">Cập nhật</button>
                             <?php echo form_error('account') ?>

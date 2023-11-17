@@ -37,15 +37,20 @@ function ajaxUploadImageAction()
     $images = $_FILES['images'];
     $result = [];
     foreach ($images['name'] as $key => $name) {
-        $tmp_name = $images['tmp_name'][$key];
+        $tmp_name = $images['tmp_name'][$key]; // Lấy phần tử cụ thể trong mảng tmp_name
         $uploadPath = "img/" . basename($name);
         $duoiFile = ['jpg', 'png', 'jpeg', 'gif', 'tiff'];
         $duoiImg = pathinfo($uploadPath, PATHINFO_EXTENSION);
-        if (in_array($duoiImg, $duoiFile)) {
-            move_uploaded_file($tmp_name, $uploadPath);
-            $result[] = $name;
+
+        if (in_array(strtolower($duoiImg), $duoiFile)) { // Chuyển đuôi file về chữ thường và kiểm tra
+            if (move_uploaded_file($tmp_name, $uploadPath)) {
+                $result[] = $name;
+            } else {
+                echo json_encode(array('status' => 'error', 'message' => 'Failed to move uploaded file.'));
+                return false;
+            }
         } else {
-            echo json_encode(array('status' => 'error'));
+            echo json_encode(array('status' => 'error', 'message' => 'Invalid file type.'));
             return false;
         }
     }
@@ -177,8 +182,9 @@ function add_productAction() //Thêm sản phẩm
 function delete_productAction() //Xóa sản phẩm
 {
     $id = (int)$_GET['id'];
-    add_list_delete($id);
     delete_product($id);
+    delete_related($id);//Xóa các thuộc tính liên quan đến sản phẩm
+    redirect("?mod=product&action=list_product");
 }
 
 function update_productAction() //Sửa sản phẩm
@@ -256,10 +262,8 @@ function update_productAction() //Sửa sản phẩm
                 }
             }
         }
-
         //Kiểm tra ảnh chi tiết khi được thêm
-        if (isset($_FILES['images'])) {
-            // show_array($_FILES['images']);
+        if (isset($_FILES['images']['name'])) {
             foreach ($_FILES['images']['name'] as $key => $value) {
                 if (is_file_img($value)) {
                     $images = $_FILES['images']['name'];
@@ -268,7 +272,7 @@ function update_productAction() //Sửa sản phẩm
                 }
             }
         }
-        //Kiểm tra dữ liệu màu sắc sẵn có
+        // Kiểm tra dữ liệu màu sắc sẵn có
         if (isset($_POST['available_color'])) {
             if (check_array($_POST['available_color'])) {
                 $error['data_color'] = "Không được để trống";
@@ -417,7 +421,6 @@ function list_productAction() //Danh sách sản phẩm
     $data['num_products'] = num_products();
     $data['num_products_posted'] = num_products_posted();
     $data['num_products_pending'] = num_products_pending();
-    $data['num_product_delete'] = num_product_delete();
     //
     $status =  (!empty($_GET['status'])) ? $_GET['status'] : null;
     $cat_id =  (!empty($_GET['cat_id'])) ? $_GET['cat_id'] : null;
@@ -490,7 +493,6 @@ function seach_productAction()
     $data['num_products'] = num_products();
     $data['num_products_posted'] = num_products_posted();
     $data['num_products_pending'] = num_products_pending();
-    $data['num_product_delete'] = num_product_delete();
     //
     $data['list_seach'] = seach_product($seach);
     load_view('seach_product', $data);

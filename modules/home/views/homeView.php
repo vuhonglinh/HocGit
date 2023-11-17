@@ -87,11 +87,7 @@ global $num_rows;
                                         <div class="d-flex">
                                             <p class="text-danger float-left" style="font-size: 12px;"><?php echo currency_format($item['price']) ?></p>
                                         </div>
-                                        <?php if ($item['quantity'] < 1) : ?>
-                                            <a onclick="return alert('Sản phẩm hiện tại không còn hàng')" class="text-decoration-none">Mua ngay</a>
-                                        <?php else : ?>
-                                            <a href="?mod=product&action=add_cart&id=<?php echo $item['product_id'] ?>" class="text-decoration-none">Mua ngay</a>
-                                        <?php endif; ?>
+                                        <a href="?mod=product&action=add_cart&id=<?php echo $item['product_id'] ?>" class="text-decoration-none">Mua ngay</a>
                                     </div>
                                 </div>
                             </div>
@@ -116,16 +112,8 @@ global $num_rows;
                                 <div class="col-md-3 mb-3">
                                     <div class="list-product text-center border border-dark rounded">
                                         <div class="add-list">
-                                            <?php if ($item['quantity'] < 1) : ?>
-                                                <button class="rounded-circle" onclick="return alert('Sản phẩm hiện tại không còn hàng')">ADD</button>
-                                            <?php else : ?>
-                                                <button onclick="addCart(event)" class="rounded-circle" id="add-cart" id_product="<?php echo $item['product_id'] ?>">ADD</button>
-                                            <?php endif; ?>
-                                            <?php if ($item['quantity'] < 1) : ?>
-                                                <a onclick="return alert('Sản phẩm hiện tại không còn hàng')">MUA</a>
-                                            <?php else : ?>
-                                                <a href="?mod=product&action=add_cart&id=<?php echo $item['product_id'] ?>">MUA</a>
-                                            <?php endif; ?>
+                                            <button onclick="addCart(event)" class="rounded-circle" id="add-cart" id_product="<?php echo $item['product_id'] ?>">ADD</button>
+                                            <a href="?mod=product&action=add_cart&id=<?php echo $item['product_id'] ?>">MUA</a>
                                         </div>
                                         <div id="img-product-size">
                                             <img class="img-fluid img-thumbnail border-0" src="admin/img/<?php echo $item['product_thumb'] ?>" alt="">
@@ -160,16 +148,8 @@ global $num_rows;
                                 <div class="col-md-3 mb-3">
                                     <div class="list-product text-center border border-dark rounded">
                                         <div class="add-list">
-                                            <?php if ($item['quantity'] < 1) : ?>
-                                                <button class="rounded-circle" onclick="return alert('Sản phẩm hiện tại không còn hàng')">ADD</button>
-                                            <?php else : ?>
-                                                <button onclick="addCart(event)" class="rounded-circle" id="add-cart" id_product="<?php echo $item['product_id'] ?>">ADD</button>
-                                            <?php endif; ?>
-                                            <?php if ($item['quantity'] < 1) : ?>
-                                                <a onclick="return alert('Sản phẩm hiện tại không còn hàng')">MUA</a>
-                                            <?php else : ?>
+                                                <button onclick="addCart(event)" class="rounded-circle" id="add-cart" id_product="<?php echo $item['product_id'] ?>">ADD</button>                                
                                                 <a href="?mod=product&action=add_cart&id=<?php echo $item['product_id'] ?>">MUA</a>
-                                            <?php endif; ?>
                                         </div>
                                         <div id="img-product-size">
                                             <img class="img-fluid img-thumbnail border-0" src="admin/img/<?php echo $item['product_thumb'] ?>" alt="">
@@ -204,16 +184,11 @@ global $num_rows;
                                 <div class="col-md-3 mb-3">
                                     <div class="list-product text-center border border-dark rounded">
                                         <div class="add-list">
-                                            <?php if ($item['quantity'] < 1) : ?>
-                                                <button class="rounded-circle" onclick="return alert('Sản phẩm hiện tại không còn hàng')">ADD</button>
-                                            <?php else : ?>
+                                          
                                                 <button onclick="addCart(event)" class="rounded-circle" id="add-cart" id_product="<?php echo $item['product_id'] ?>">ADD</button>
-                                            <?php endif; ?>
-                                            <?php if ($item['quantity'] < 1) : ?>
-                                                <a onclick="return alert('Sản phẩm hiện tại không còn hàng')">MUA</a>
-                                            <?php else : ?>
+                                            
                                                 <a href="?mod=product&action=add_cart&id=<?php echo $item['product_id'] ?>">MUA</a>
-                                            <?php endif; ?>
+                                          
                                         </div>
                                         <div id="img-product-size">
                                             <img class="img-fluid img-thumbnail border-0" src="admin/img/<?php echo $item['product_thumb'] ?>" alt="">

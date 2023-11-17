@@ -13,7 +13,6 @@ get_sidebar();
             <li class="breadcrumb-item"><a href="?mod=product&action=list_product&status=Đã đăng" class="text-decoration-none">Đã đăng(<?php echo $num_products_posted ?>)</a></li>
             <li class="breadcrumb-item"><a href="?mod=product&action=list_product&status=Chờ xét duyệt" class="text-decoration-none">Chờ xét duyệt(<?php echo $num_products_pending ?>)</a>
             </li>
-            <li class="breadcrumb-item"><a href="?mod=product&controller=delete&action=list_product_delete" class="text-decoration-none">Thùng rác(<?php echo $num_product_delete ?>)</a></li>
             <?php if (!empty($list_cat)) :
                 foreach ($list_cat as $item) :
             ?>

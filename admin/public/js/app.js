@@ -16,6 +16,7 @@ function remove_(_this) {//Xóa ảnh chi tiết ở Update sản phẩm
 
 function uploadImageDetail(event) { //Thêm ảnh chi tiết sản phẩm
     var inputFile = new FormData($("#imageUploadDetail")[0]);
+    console.log(inputFile);
     $.ajax({
         url: '?mod=product&action=ajaxUploadImage',
         method: 'POST',

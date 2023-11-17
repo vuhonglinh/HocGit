@@ -46,8 +46,7 @@ function updateAction()
             update_user_login(user_login(), $data);
         }
     }
-    $info_user = get_user_by_username(user_login());
-    $data['info_user'] = $info_user;
+    $data['info_user'] = get_user_by_username(user_login());
     load_view('update', $data);
 }
 
@@ -93,7 +92,8 @@ function resetAction() //Cập nhật mật khẩu
             $error['account'] = "Cập nhật mật khẩu thành công";
         }
     }
-    load_view('reset');
+    $data['info_user'] = get_user_by_username(user_login());
+    load_view('reset', $data);
 }
 
 function mainAction()
@@ -145,7 +145,6 @@ function mainAction()
             update_user_login(user_login(), $data);
         }
     }
-    $info_user = get_user_by_username(user_login());
-    $data['info_user'] = $info_user;
-    load_view('main',$data);
+    $data['info_user'] = get_user_by_username(user_login());
+    load_view('main', $data);
 }

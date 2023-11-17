@@ -62,7 +62,7 @@ function list_products($select, $price, $category)
 }
 function get_product_by_id($id)
 {
-    $sql = db_fetch_row("SELECT * FROM tb_products INNER JOIN list_images ON tb_products.product_id = list_images.img_id WHERE tb_products.product_id = '$id'");
+    $sql = db_fetch_row("SELECT * FROM tb_products  WHERE `product_id` = '$id'");
     return $sql;
 }
 
@@ -135,8 +135,30 @@ function num_product_star_1($id)
     return $sql;
 }
 
-function get_variant_color($id)
+function get_img_detail_by_id($id) //Lấy danh sách ảnh chi tiết của sản phẩm
 {
-    $sql = db_fetch_array("SELECT * FROM `color_variations` WHERE `product_id` = {$id}");
+    $sql = db_fetch_array("SELECT * FROM `tb_image_details` WHERE `product_id` = {$id}");
+    return $sql;
+}
+function get_variant_color($id) //Lấy danh sách biên thể màu sắc theo id sp
+{
+    $sql = db_fetch_array("SELECT * FROM `tb_color_variants` WHERE `product_id` = {$id}");
+    return $sql;
+}
+function get_variant_ram($id) //Lấy danh sách biến thể ram theo id sản phẩm
+{
+    $sql = db_fetch_array("SELECT * FROM `tb_memory_variants` WHERE `product_id` = {$id}");
+    return $sql;
+}
+
+function get_color_by_id($id) //Lấy thuộc tính màu sắc
+{
+    $sql = db_fetch_row("SELECT * FROM `tb_color_variants` WHERE `id` = {$id}");
+    return $sql;
+}
+
+function get_ram_by_id($id) //Lấy thuộc tính ram
+{
+    $sql = db_fetch_row("SELECT * FROM `tb_memory_variants` WHERE `id` = {$id}");
     return $sql;
 }
