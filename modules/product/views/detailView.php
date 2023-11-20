@@ -1,6 +1,5 @@
 <?php
 get_header();
-show_array($_SESSION['cart']['buy']);
 ?>
 <!-- <div class="alert alert-warning alert-dismissible fade show fixed-top text-center" role="alert">
     Vui lòng chọn đầy đủ thông tin của sản phẩm trước khi đặt mua!
@@ -100,7 +99,7 @@ show_array($_SESSION['cart']['buy']);
                     data: data,
                     dataType: 'html',
                     success: function(data) {
-                        console.log(data);
+                        alert("Đã thêm vào giỏ hàng");
                     }
 
                 })

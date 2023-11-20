@@ -76,7 +76,7 @@ function get_list_buy_cart()
 {
     if (isset($_SESSION['cart'])) {
         foreach ($_SESSION['cart']['buy'] as &$item) { //Cập nhật lại và thêm url
-            $item['url_delete'] = "?mod=cart&action=delete&id={$item['product_id']}";
+            $item['url_delete'] = "?mod=cart&action=delete&id={$item['color_id']}";
         }
         return $_SESSION['cart']['buy'];
     }

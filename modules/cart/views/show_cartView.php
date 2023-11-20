@@ -44,11 +44,11 @@ get_header();
                                             <td><a href="<?php echo "san-pham/chi-tiet/" . create_slug($item['product_name']) . "/" . $item['product_id'] . ".html"; ?>" class="text-decoration-none"><?php echo $item['product_name'] ?></a></td>
                                             <td class="text-danger"><?php echo currency_format($item['price']) ?></td>
                                             <td>
-                                                <input type="number" name="qty[<?php echo $item['product_id'] ?>]" min="1" max="<?php echo $item['max_quantity']?>" value="<?php echo $item['qty'] ?>">
+                                                <input type="number" name="qty[<?php echo $item['product_id'] ?>]" min="1" max="" value="<?php echo $item['qty'] ?>">
                                             </td>
                                             <td class="text-danger"><?php echo currency_format($item['sub_total']) ?></td>
                                             <td>
-                                                <a href="<?php echo $item['url_delete'] ?>&qty_delete=<?php echo $item['qty'] ?>">
+                                                <a href="<?php echo $item['url_delete'] ?>">
                                                     <img src="img/delete.png" alt="">
                                                 </a>
                                             </td>

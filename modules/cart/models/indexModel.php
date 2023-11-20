@@ -2,7 +2,7 @@
 function add_cart($id_color,$quantity)
 {
     add_product_put_cart($id_color, $quantity);
-    // get_list_buy_cart();
+    get_list_buy_cart();
 }
 function delete_cart($id)
 {
