@@ -11,9 +11,12 @@ function indexAction()
 
 function add_cartAction()
 {
-    $id = $_GET['id'];
-    $num_order = !empty($_POST['num-order']) ? $_POST['num-order'] : null;
-    add_cart($id, $num_order);
+    $product_id = $_POST['product_id'];
+    $id_color = $_POST['id_color'];
+    $id_ram = $_POST['id_ram'];
+    $quantity = $_POST['quantity'];
+    add_cart($id_color, $quantity);
+    echo json_encode($id_color);
 }
 function deleteAction()
 {

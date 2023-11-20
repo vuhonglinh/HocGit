@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="public/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="public/css/index.css">
+    <script src="admin/public/js/code.jquery.com_jquery-3.6.4.min.js" text="type/javascript"></script>
     <script src="public/js/app.js" text="type/javascript"></script>
 </head>
 

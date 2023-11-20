@@ -1,4 +1,9 @@
 <?php
+function get_product_by_id($id) //Lấy chi tiết sản phẩm
+{
+    $sql = db_fetch_row("SELECT * FROM `tb_products` WHERE `product_id` = {$id}");
+    return $sql;
+}
 function get_padding($num_rows)
 {
     $num_page = ceil(db_num_rows("SELECT * FROM `tb_products` WHERE `status` = 'Đã đăng'") / $num_rows);
@@ -60,11 +65,6 @@ function list_products($select, $price, $category)
     $sql = db_fetch_array("SELECT * FROM `tb_products` {$where} `status` = 'Đã đăng' {$select}");
     return $sql;
 }
-function get_product_by_id($id)
-{
-    $sql = db_fetch_row("SELECT * FROM tb_products  WHERE `product_id` = '$id'");
-    return $sql;
-}
 
 function add_cart($id, $num_order)
 {
@@ -92,7 +92,8 @@ function add_comments($data_add_comemnt) //Cập nhật bình luận
 
 function get_list_comments($id)
 {
-    $sql = db_fetch_array("SELECT * FROM `tb_comments` WHERE `id_product` = '$id' ORDER BY `time` DESC");
+    $sql = db_fetch_array("SELECT * FROM `tb_comments` INNER JOIN `tb_customers` 
+    ON tb_comments.id_customer = tb_customers.id WHERE `id_product` = '$id' ORDER BY `time` DESC");
     return $sql;
 }
 
@@ -147,18 +148,20 @@ function get_variant_color($id) //Lấy danh sách biên thể màu sắc theo i
 }
 function get_variant_ram($id) //Lấy danh sách biến thể ram theo id sản phẩm
 {
-    $sql = db_fetch_array("SELECT * FROM `tb_memory_variants` WHERE `product_id` = {$id}");
+    $sql = db_fetch_array("SELECT * FROM `tb_ram_variants` WHERE `product_id` = {$id}");
     return $sql;
 }
 
-function get_color_by_id($id) //Lấy thuộc tính màu sắc
+function get_list_color_variant_by_ram_id($ram_id) //Lấy danh sách biến thể màu sắc theo ram id
 {
-    $sql = db_fetch_row("SELECT * FROM `tb_color_variants` WHERE `id` = {$id}");
+    $sql = db_fetch_array("SELECT * FROM `tb_color_variants` WHERE `ram_id` = {$ram_id}");
     return $sql;
 }
 
-function get_ram_by_id($id) //Lấy thuộc tính ram
+function get_color_variant($color_id) //Lấy ra màu sắc theo id màu sắc
 {
-    $sql = db_fetch_row("SELECT * FROM `tb_memory_variants` WHERE `id` = {$id}");
+    $sql = db_fetch_row("SELECT * FROM `tb_color_variants` INNER JOIN `tb_products` ON tb_color_variants.product_id = tb_products.product_id
+     INNER JOIN `tb_ram_variants` ON tb_color_variants.ram_id = tb_ram_variants.id 
+     WHERE tb_color_variants.id = {$color_id}");
     return $sql;
 }

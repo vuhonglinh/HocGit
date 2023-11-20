@@ -1,45 +1,4 @@
-function scrollChatToBottom() {//Cho thanh croll luôn ở dưới cùng
-    var chatBox = document.querySelector('.chat-content');
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
-scrollChatToBottom();
-$(document).ready(function () {//Thêm bình luận
-    $('#btn-chat').click(function (e) {
-        e.preventDefault();
-        var message = $('#message').val();
-        if (message == "") {
-            return false;
-        }
-        var data = { message: message };
-        $.ajax({
-            url: '?mod=users&action=chatAjax',
-            method: 'POST',
-            data: data,
-            dataType: 'json',
-            success: function (data) {
-                var string = "";
-                data.forEach(element => {
-                    console.log(element.status);
-                    if (element.status == 0) {
-                        string += "<div class='float-right chat-content-item-right'>" +
-                            "<p>" + element.message + "</p>" +
-                            "<span class='text-muted small'>" + element.created_at + "</span>" +
-                            "</div>";
-                    } else {
-                        string += "<div class='float-left chat-content-item-left'>" +
-                            "<p>" + element.message + "</p>" +
-                            "<span class='text-muted small'>" + element.created_at + "</span>" +
-                            "</div>";
-                    }
 
-                });
-                $(".chat-content").html(string);
-                scrollChatToBottom();
-                $('#message').val("");
-            }
-        })
-    });
-});
 
 
 
@@ -98,14 +57,19 @@ $(document).ready(function () {//Thêm bình luận
             success: function (data) {
                 var result = "";
                 data.forEach(element => {
+                    if (element.img == "") {
+                        img_user = "img/user.png";
+                    } else {
+                        img_user = "admin/img/"+element.img;
+                    }
                     var img = "";
                     for (let i = 1; i <= element.star; i++) {
                         img += "<img src='img/sao.png' alt=''>";
                     }
                     string = "<div id='item-comment'>" +
                         "<div id='header-comment'>" +
-                        "<img id='img-user-comment' class='box rounded-circle' src='img/user.png' alt=''>" +
-                        "<h6 class='mt-2 ml-1'>" + element.creator + "</h6>" +
+                        "<img id='img-user-comment' class='box rounded-circle' src='" + img_user + "' alt=''>" +
+                        "<h6 class='mt-2 ml-1'>" + element.fullname + "</h6>" +
                         "</div>" +
                         "<div>" + img +
                         "</div>" +
@@ -157,5 +121,48 @@ $(document).ready(function () {
         e.preventDefault();
         window.open($(this).attr('href'), 'fbShareWindow', 'height=450, width=550, top=' + ($(window).height() / 2 - 275) + ', left=' + ($(window).width() / 2 - 225) + ', toolbar=0, location=0, menubar=0,         directories=0, scrollbars=0');
         return false;
+    });
+});
+
+function scrollChatToBottom() {//Cho thanh croll luôn ở dưới cùng
+    var chatBox = document.querySelector('.chat-content');
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+scrollChatToBottom();
+$(document).ready(function () {//Thêm bình luận
+    $('#btn-chat').click(function (e) {
+        e.preventDefault();
+        var message = $('#message').val();
+        if (message == "") {
+            return false;
+        }
+        var data = { message: message };
+        $.ajax({
+            url: '?mod=users&action=chatAjax',
+            method: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function (data) {
+                var string = "";
+                data.forEach(element => {
+                    console.log(element.status);
+                    if (element.status == 0) {
+                        string += "<div class='float-right chat-content-item-right'>" +
+                            "<p>" + element.message + "</p>" +
+                            "<span class='text-muted small'>" + element.created_at + "</span>" +
+                            "</div>";
+                    } else {
+                        string += "<div class='float-left chat-content-item-left'>" +
+                            "<p>" + element.message + "</p>" +
+                            "<span class='text-muted small'>" + element.created_at + "</span>" +
+                            "</div>";
+                    }
+
+                });
+                $(".chat-content").html(string);
+                scrollChatToBottom();
+                $('#message').val("");
+            }
+        })
     });
 });

@@ -224,6 +224,25 @@ div #mane-product {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
+.color-radio {
+    display: none;
+}
+
+.color-label {
+    display: block;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    opacity: 0.7;
+}
+
+.color-radio:checked+.color-label {
+    border: 2px solid black;
+    opacity: unset;
+}
+
 /* Phần thuộc tính màu sắc sản phẩm chi tiết */
 #product-color-detail {
     display: flex;
@@ -263,7 +282,8 @@ div #mane-product {
 }
 
 #img-user-comment {
-    height: 30px;
+    height: 33px;
+    width: 30px;
 }
 
 #list_comment {

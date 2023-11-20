@@ -77,7 +77,11 @@ function add_productAction() //Thêm sản phẩm
         if (empty($_POST['price'])) {
             $error['price'] = "Không được để trống";
         } else {
-            $price = $_POST['price'];
+            if (filter_var($_POST['price'], FILTER_VALIDATE_INT)) {
+                $price = $_POST['price'];
+            } else {
+                $error['price'] = "Không đúng định dạng";
+            }
         }
         ////Kiểm tra product_desc
         if (empty($_POST['product_desc'])) {
@@ -120,17 +124,35 @@ function add_productAction() //Thêm sản phẩm
         } else {
             $images = $_FILES['images']['name'];
         }
-        //Kiểm tra biến thể màu sắc
-        if (check_array($_POST['data_color'])) {
-            $error['data_color'] = "Không được để trống";
-        } else {
-            $color_var = $_POST['data_color'];
-        }
-        //Kiểm tra biến thể màu sắc
-        if (check_array($_POST['data_ram'])) {
-            $error['data_ram'] = "Không được để trống";
-        } else {
-            $ram_var = $_POST['data_ram'];
+
+        //Kiểm tra biến thể
+        if (isset($_POST['ram_variants'])) {
+            if (empty($_POST['ram_variants'])) {
+                $error['variants'] = "Không được để trống biến thể";
+            } else {
+                foreach ($_POST['ram_variants'] as $item) {
+                    if (empty($item['name'])) {
+                        $error['variants'] = "Không được để trống biến thể";
+                    } else {
+                        $vartians = $_POST['ram_variants'];
+                    }
+                    if (isset($item['colors'])) {
+                        if (empty($item['colors'])) {
+                            $error['variants'] = "Không được để trống biến thể";
+                        } else {
+                            foreach ($item['colors'] as $v) {
+                                if (empty($v['name']) || empty($v['price']) || empty($v['qty']) || empty($v['color'])) {
+                                    $error['variants'] = "Không được để trống biến thể";
+                                } else {
+                                    $vartians = $_POST['ram_variants'];
+                                }
+                            }
+                        }
+                    } else {
+                        $vartians = $_POST['ram_variants'];
+                    }
+                }
+            }
         }
         //Kết luận
         if (empty($error)) {
@@ -153,24 +175,29 @@ function add_productAction() //Thêm sản phẩm
                 ];
                 add_detail_img($data_image);
             }
-            foreach ($color_var as $value) { //Add thuộc tính màu sắc của sản phẩm
-                $data_color = [
-                    'product_id' => $id_product,
-                    'color_price' => $value['price'],
-                    'color_name' => $value['name'],
-                    'color' => $value['color'],
-                    'quantity' => $value['qty'],
-                ];
-                add_variants_color($data_color);
-            }
-            foreach ($ram_var as $value) { //Add thuộc tính ram của sản phẩm
-                $data_ram = [
-                    'product_id' => $id_product,
-                    'nemory_price' => $value['price'],
-                    'nemory_name' => $value['name'],
-                    'quantity' => $value['qty'],
-                ];
-                add_variants_ram($data_ram);
+            if (isset($vartians)) {
+                foreach ($vartians as $key => $item) { //Thêm biến thể ram
+                    $data_ram = [
+                        'product_id' => $id_product,
+                        'ram_name' => $item['name'],
+                    ];
+                    $ram_id = add_ram_vartians($data_ram); //Thêm thuộc tính ram
+                    if (isset($item['colors'])) {
+                        if (is_array($item['colors'])) {
+                            foreach ($item['colors'] as $v) {
+                                $data_color = [
+                                    'ram_id' => $ram_id,
+                                    'product_id' => $id_product,
+                                    'color_name' => $v['name'],
+                                    'color_price' => $v['price'],
+                                    'color' => $v['color'],
+                                    'quantity' => $v['qty'],
+                                ];
+                                add_color_vartians($data_color); //Thêm biến thể màu sắc
+                            }
+                        }
+                    }
+                }
             }
             $error['account'] = "Thêm sản phẩm thành công";
         }
@@ -183,7 +210,7 @@ function delete_productAction() //Xóa sản phẩm
 {
     $id = (int)$_GET['id'];
     delete_product($id);
-    delete_related($id);//Xóa các thuộc tính liên quan đến sản phẩm
+    delete_related($id); //Xóa các thuộc tính liên quan đến sản phẩm
     redirect("?mod=product&action=list_product");
 }
 
@@ -192,8 +219,8 @@ function update_productAction() //Sửa sản phẩm
     global $error, $product_name, $product_code, $price, $product_desc, $file, $product_content, $status, $parent_id;
     $id = $_GET['id'];
     $data['product'] = get_product_by_id($id); //Lấy sản phẩm
-    $data['list_color_var'] = get_color_variants($id); //Lấy thuộc tính màu sắc của sản phẩm theo id
     $data['list_ram_var'] = get_ram_variants($id); //Lấy thuộc tính ram của sản phẩm theo id
+    // $data['list_color_var'] = get_color_variants($id); //Lấy thuộc tính màu sắc của sản phẩm theo id
     $data['list_category'] = list_category();
     if (isset($_POST['update_product'])) {
         $error = [];
@@ -272,80 +299,80 @@ function update_productAction() //Sửa sản phẩm
                 }
             }
         }
-        // Kiểm tra dữ liệu màu sắc sẵn có
-        if (isset($_POST['available_color'])) {
-            if (check_array($_POST['available_color'])) {
-                $error['data_color'] = "Không được để trống";
-            } else {
-                $available_color =  $_POST['available_color'];
-                $key_string_color = "";
-                foreach ($available_color as $key => $value) {
-                    $key_string_color .= "$key,"; //Lọc ra các id màu sắc đươc update
-                    $data_available_color = [
-                        'color_price' => $value['price'],
-                        'color_name' => $value['name'],
-                        'quantity' => $value['qty'],
-                        'color' => $value['color'],
-                    ];
-                    update_variants_color($data_available_color, $key); //Cập nhật các biến thể màu sắc
+        //Kiểm tra biến thể
+        // show_array($_POST['update_ram_variants']);
+        $string_id = "";
+        // show_array($_POST['update_ram_variants']);
+        if (isset($_POST['update_ram_variants'])) {
+            foreach ($_POST['update_ram_variants'] as $key => $item) {
+                $string_id_color = "";
+                $string_id .= "{$key},";
+                if (isset($item['colors'])) {
+                    foreach ($item['colors'] as $k => $v) {
+                        $string_id_color .= "$k,";
+                        $data_update_color = [
+                            'color_name' => $v['name'],
+                            'color_price' => $v['price'],
+                            'color' => $v['color'],
+                            'quantity' => $v['qty'],
+                        ];
+                        update_variants_color($data_update_color, $k); //Cập nhật biến thể màu sắc theo id
+                    }
+                    if (!empty($string_id_color)) {
+                        $string_id_color = substr($string_id_color, 0, -1);
+                        delete_variant_color_isset_by_id("tb_color_variants", $string_id_color, $key, $id); //Xóa danh sach id ram không tồn tại
+                    }
+                } else {
+                    delete_all_variant_color($key); //Xóa toàn bộ biến thể màu theo ram_id
                 }
-                $key_string_color = substr($key_string_color, 0, -1);
-                remove_interval_variation("tb_color_variants", $key_string_color, $id); //Xóa các biến thể màu sắc không có trong danh sách id
-            }
-        }
-        //Kiểm tra biến thể màu sắc Insert
-        if (isset($_POST['data_color'])) {
-            if (check_array($_POST['data_color'])) {
-                $error['data_color'] = "Không được để trống";
-            } else {
-                $color_var = $_POST['data_color'];
-                foreach ($color_var as $value) { //Add thuộc tính màu sắc của sản phẩm
-                    $data_color = [
-                        'product_id' => $id,
-                        'color_price' => $value['price'],
-                        'color_name' => $value['name'],
-                        'color' => $value['color'],
-                        'quantity' => $value['qty'],
-                    ];
-                    add_variants_color($data_color);
+                if (isset($item['update'])) {
+                    foreach ($item['update'] as $k => $vl) {
+                        $data_add_color = [
+                            'ram_id' => $key,
+                            'product_id' => $id,
+                            'color_name' => $vl['name'],
+                            'color_price' => $vl['price'],
+                            'color' => $vl['color'],
+                            'quantity' => $vl['qty'],
+                        ];
+                        add_variants_color($data_add_color); //Thêm biến thể màu sắc theo id ram cũ
+                    }
                 }
             }
-        }
 
-        //Kiểm tra dữ liệu sẵn có ram Update
-        if (isset($_POST['available_ram'])) {
-            if (check_array($_POST['available_ram'])) {
-                $error['data_ram'] = "Không được để trống";
-            } else {
-                $available_ram =  $_POST['available_ram'];
-                $key_string_ram = "";
-                foreach ($available_ram as $key => $value) {
-                    $key_string_ram .= "$key,"; //Lọc ra các id ram đươc update
-                    $data_available_ram = [
-                        'nemory_price' => $value['price'],
-                        'nemory_name' => $value['name'],
-                        'quantity' => $value['qty'],
-                    ];
-                    update_variants_ram($data_available_ram, $key);
-                }
-                $key_string_ram = substr($key_string_ram, 0, -1);
-                remove_interval_variation("tb_memory_variants", $key_string_ram, $id); //Xóa các biến thể màu sắc không có trong danh sách id
+            if (!empty($string_id)) {
+                $string_id = substr($string_id, 0, -1);
+                delete_variant_isset_by_id("tb_ram_variants", $string_id,  $id); //Xóa danh sach id ram không tồn tại
             }
+        } else {
+            delete_all_variant_ram($id); //Xóa toàn bộ thuộc tính của sản phẩm theo product_id
         }
-        //Kiểm tra biến thể màu sắc Insert
-        if (isset($_POST['data_ram'])) {
-            if (check_array($_POST['data_ram'])) {
-                $error['data_ram'] = "Không được để trống";
+        //Kiểm tra biến thể
+        if (isset($_POST['ram_variants'])) {
+            if (empty($_POST['ram_variants'])) {
+                $error['variants'] = "Không được để trống biến thể";
             } else {
-                $ram_var = $_POST['data_ram'];
-                foreach ($ram_var as $value) { //Add thuộc tính ram của sản phẩm
-                    $data_ram = [
-                        'product_id' => $id,
-                        'nemory_price' => $value['price'],
-                        'nemory_name' => $value['name'],
-                        'quantity' => $value['qty'],
-                    ];
-                    add_variants_ram($data_ram);
+                foreach ($_POST['ram_variants'] as $item) {
+                    if (empty($item['name'])) {
+                        $error['variants'] = "Không được để trống biến thể";
+                    } else {
+                        $vartians = $_POST['ram_variants'];
+                    }
+                    if (isset($item['colors'])) {
+                        if (empty($item['colors'])) {
+                            $error['variants'] = "Không được để trống biến thể";
+                        } else {
+                            foreach ($item['colors'] as $v) {
+                                if (empty($v['name']) || empty($v['price']) || empty($v['qty']) || empty($v['color'])) {
+                                    $error['variants'] = "Không được để trống biến thể";
+                                } else {
+                                    $vartians = $_POST['ram_variants'];
+                                }
+                            }
+                        }
+                    } else {
+                        $vartians = $_POST['ram_variants'];
+                    }
                 }
             }
         }
@@ -378,7 +405,6 @@ function update_productAction() //Sửa sản phẩm
                 $string_id = substr($string_id, 0, -1);
                 remove_interval_detail_img($string_id, $id); //Xóa các id ảnh chi tiết nếu không tồn tại trong danh sách
             }
-
             if (isset($images)) { //Add ảnh chi tiết của sản phẩm
                 foreach ($images as $value) {
                     $data_image = [
@@ -388,11 +414,35 @@ function update_productAction() //Sửa sản phẩm
                     add_detail_img($data_image);
                 }
             }
+            if (isset($vartians)) {
+                foreach ($vartians as $key => $item) { //Thêm biến thể ram
+                    $data_ram = [
+                        'product_id' => $id,
+                        'ram_name' => $item['name'],
+                    ];
+                    $ram_id = add_ram_vartians($data_ram); //Thêm thuộc tính ram
+                    if (isset($item['colors'])) {
+                        if (is_array($item['colors'])) {
+                            foreach ($item['colors'] as $v) {
+                                $data_color = [
+                                    'ram_id' => $ram_id,
+                                    'product_id' => $id,
+                                    'color_name' => $v['name'],
+                                    'color_price' => $v['price'],
+                                    'color' => $v['color'],
+                                    'quantity' => $v['qty'],
+                                ];
+                                add_color_vartians($data_color); //Thêm biến thể màu sắc
+                            }
+                        }
+                    }
+                }
+            }
             $error['account'] = "Sửa sản phẩm thành công";
         }
     }
-    $data['list_color_var'] = get_color_variants($id); //Lấy thuộc tính màu sắc của sản phẩm theo id
     $data['list_ram_var'] = get_ram_variants($id); //Lấy thuộc tính ram của sản phẩm theo id
+    $data['list_color_var'] = get_color_variants($id); //Lấy thuộc tính màu sắc của sản phẩm theo id
     $data['img_detail'] = get_detail_img_by_id($id); //Lấy ảnh chi tiết theo id sp
     $data['product'] = get_product_by_id($id);
     $data['list_category'] = list_category();

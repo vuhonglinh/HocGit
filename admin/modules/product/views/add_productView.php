@@ -47,85 +47,14 @@ get_sidebar();
                     </div><br>
                     <?php echo form_error('images') ?>
 
-                    <label class="font-weight-bold">Danh mục sản phẩm</label>
-                    <select name="parent_id" class="form-inline form-control">
-                        <option value="">-- Chọn danh mục --</option>
-                        <?php foreach ($list_category as $item) : ?>
-                            <option value="<?php echo $item['id']; ?>"><?php echo $item['title'] ?></option>
-                        <?php endforeach; ?>
-                    </select><br>
-                    <?php echo form_error('parent_id') ?>
-                    <label class="font-weight-bold">Trạng thái</label>
-                    <select name="status" class="form-inline form-control">
-                        <option value="0">-- Chọn danh mục --</option>
-                        <option value="Chờ xét duyệt">Chờ xét duyệt</option>
-                        <option value="Đã đăng">Đã đăng</option>
-                    </select><br>
-                    <?php echo form_error('status') ?>
 
-                    <label class="font-weight-bold h4">Biến thể màu sắc</label>
-                    <a href="javascript:void(0)" class="btn btn-sm btn-primary" onclick="create()">Add</a>
-                    <div id="color">
-                        <div id="item-color" class="form-row justify-content-center align-items-center">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="name_color_var">Tên thuộc tính màu sắc</label>
-                                    <input type="text" class="form-control" id="name_color_var" name="data_color[0][name]" id="username">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="price_color_var">Giá biến thể</label>
-                                    <input type="number" class="form-control" id="price_color_var" name="data_color[0][price]">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="qty_color_var">Số lượng</label>
-                                    <input type="number" class="form-control" id="qty_color_var" name="data_color[0][qty]">
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label for="color_var">Màu</label>
-                                    <input type="color" class="form-control" id="color_var" name="data_color[0][color]">
-                                </div>
-                            </div>
-                            <div class="col-md-1">
+                    <label for="">Biến thể Ram</label>
+                    <a href="javascript:void(0)" class="btn btn-sm btn-primary" onclick="addRamVariant()">Thêm Biến Thể Ram</a>
+                    <div id="ramVariants">
+                        <!-- Biến thể được thêm vào đây -->
+                    </div><br>
+                    <?php echo form_error('variants') ?>
 
-                            </div>
-                        </div>
-                    </div>
-                    <?php echo form_error('data_color') ?>
-
-                    <label class="font-weight-bold h4">Biến thể Ram</label>
-                    <a href="javascript:void(0)" class="btn btn-sm  btn-primary" onclick="create1()">Add</a>
-                    <div id="ram">
-                        <div id="item-ram" class="form-row justify-content-center align-items-center">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="name_ram_var">Tên thuộc tính ram</label>
-                                    <input type="text" class="form-control" id="name_ram_var" name="data_ram[0][name]" id="username">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="price_ram_var">Giá biến thể</label>
-                                    <input type="number" class="form-control" id="price_ram_var" name="data_ram[0][price]">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="qty_ram_var">Số lượng</label>
-                                    <input type="number" class="form-control" id="qty_ram_var" name="data_ram[0][qty]">
-                                </div>
-                            </div>
-                            <div class="col-md-1">
-
-                            </div>
-                        </div>
-                    </div>
-                    <?php echo form_error('data_ram') ?>
                     <label class="font-weight-bold">Danh mục sản phẩm</label>
                     <select name="parent_id" class="form-inline form-control">
                         <option value="">-- Chọn danh mục --</option>

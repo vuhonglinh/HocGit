@@ -1,6 +1,13 @@
 <?php
 get_header();
+show_array($_SESSION['cart']['buy']);
 ?>
+<!-- <div class="alert alert-warning alert-dismissible fade show fixed-top text-center" role="alert">
+    Vui lòng chọn đầy đủ thông tin của sản phẩm trước khi đặt mua!
+    <button type="button" class="close" data-dismiss="alert" aria-label="close">
+        <span aria-hidden="true">×</span>
+    </button>
+</div> -->
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -33,59 +40,100 @@ get_header();
                             </div>
                         </div>
                         <div class="mt-4 child-img">
+                            <img id="ride-thumb" class="img-thumbnail" src="admin/img/<?php echo $product['product_thumb'] ?>" alt="">
                             <?php foreach ($list_img_detail as $item) : ?>
                                 <img id="ride-thumb" class="img-thumbnail" src="admin/img/<?php echo $item['image'] ?>" alt="">
                             <?php endforeach; ?>
                         </div>
                     </div>
                     <div class="col-md-5 mt-3">
-                        <form action="?mod=cart&action=add_cart&id=<?php echo $product['product_id'] ?>" method="post">
+                        <form action="" method="post">
                             <p class="h4" id="product_name"><?php echo $product['product_name'] ?></p>
                             <div class="pt-2 border-top">
                                 <?php echo $product['product_desc'] ?>
                             </div>
                             <div class="my-3">
-                                <?php if (!empty($variant_color)) : ?>
-                                    <span class="color">Màu sắc: </span>
-                                    <select name="color" id="color">
-                                        <option value="">---Chọn---</option>
-                                        <?php foreach ($variant_color as $item) : ?>
-                                            <option <?php if ($item['quantity'] == 0) echo "disabled" ?> value="<?php echo $item['id'] ?>"><?php echo $item['color_name'] ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                <?php endif ?>
                                 <?php if (!empty($variant_ram)) : ?>
                                     <span class="ram">Dung lượng: </span>
-                                    <select name="ram" id="ram" onchange="selectColor(this)" product_id="<?php echo $product['product_id'] ?>">
-                                        <option value="">---Chọn---</option>
+                                    <select name="ram" id="ram" onchange="selectVar()" product_id="<?php echo $product['product_id'] ?>">
                                         <?php foreach ($variant_ram as $item) : ?>
-                                            <option <?php if ($item['quantity'] == 0) echo "disabled" ?> value="<?php echo $item['id'] ?>"><?php echo $item['nemory_name'] ?></option>
+                                            <option value="<?php echo $item['id'] ?>"><?php echo $item['ram_name'] ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 <?php endif ?>
+
+                                <div class="d-flex my-3" id="color_var">
+
+                                </div>
                             </div>
-                            <div class="num-product">
-                                <span class="title">Sản phẩm: </span>
-                                <span class="bg-danger text-white p-1">Hết hàng</span>
+                            <div class="num-product d-flex" id="status">
                             </div>
                             <p class="h3 text-danger mt-3" id="product_price"><?php echo currency_format($product['price']) ?></p>
                             <div class="d-flex" id="quantity">
                             </div>
-                            <button type="submit" title="Thêm giỏ hàng" class="btn btn-primary my-3 btn-lg">Thêm giỏ hàng</button>
+                            <button type="submit" onclick="add_cart(event)" title="Thêm giỏ hàng" class="btn btn-primary my-3 btn-lg">Thêm giỏ hàng</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
         <script>
-            function selectColor(_this) {
-                var product_id = $(_this).attr("product_id");
-                var color = $("#color").val();
-                var ram = $(_this).val();
+            function add_cart(event) {
+                event.preventDefault();
+                var product_id = $("#ram").attr("product_id");
+                var id_ram = $("#ram").val();
+                var id_color = $("input[name='color']:checked").val();
+                var quantity = $("#num-order").val();
+                if (id_color == null) {
+                    alert("Vui lòng chọn đầy đủ thông tin của sản phẩm trước khi đặt mua!");
+                    return false;
+                }
+                var data = {
+                    product_id: product_id,
+                    id_color: id_color,
+                    id_ram: id_ram,
+                    quantity: quantity,
+                }
+                $.ajax({
+                    url: '?mod=cart&action=add_cart',
+                    method: 'POST',
+                    data: data,
+                    dataType: 'html',
+                    success: function(data) {
+                        console.log(data);
+                    }
+
+                })
+
+            }
+
+            function selectColorVar(_this) {
+                var color_id = $(_this).val();
+                var data = {
+                    color_id: color_id,
+                }
+                $.ajax({
+                    url: '?mod=product&action=detail_color_ajax',
+                    method: 'POST',
+                    data: data,
+                    dataType: 'json',
+                    success: function(data) {
+                        $("#product_name").html(data.product_name);
+                        $("#product_price").html(data.price);
+                        $("#status").html(
+                            `<div onclick="minus()" class="border-primary"><img class="img-fluid img-thumbnail" src="img/minus-sign.png" alt=""></div>
+                                <input type="number" name="num-order" id="num-order" min="1" max="` + data.quantity + `" value="1" id="num-order" style="width: 50px; margin: 0px 5px;" class="text-center cm-number">
+                                <div onclick="plus()" class="border-primary"><img class="img-fluid img-thumbnail" src="img/add.png" alt=""></div>`);
+                    }
+                })
+            }
+
+            function selectVar() {
+                var product_id = $("#ram").attr("product_id");
+                var ram = $("#ram").val();
                 var data = {
                     product_id: product_id,
                     ram: ram,
-                    color: color
                 }
                 $.ajax({
                     url: '?mod=product&action=detail_ajax',
@@ -93,12 +141,11 @@ get_header();
                     data: data,
                     dataType: 'json',
                     success: function(data) {
-                        $("#product_name").html(data.product_name);
-                        $("#product_price").html(data.price);
-                        $("#quantity").html(data.quantity);
+                        $("#color_var").html(data);
                     }
                 })
             }
+            selectVar();
         </script>
         <div class="row mt-5 bg-white">
             <div class="col-md-12">
@@ -153,8 +200,8 @@ get_header();
                             ?>
                                     <div id="item-comment">
                                         <div id="header-comment">
-                                            <img id="img-user-comment" class="box rounded-circle" src="img/user.png" alt="">
-                                            <h6 class="mt-2 ml-1"><?php echo $item['creator'] ?></h6>
+                                            <img id="img-user-comment" class="box rounded-circle" src="<?php echo (!empty($item['img'])) ? "admin/img/{$item['img']}" : "img/user.png"; ?>" alt="">
+                                            <h6 class="mt-2 ml-1"><?php echo $item['fullname'] ?></h6>
                                         </div>
                                         <div>
                                             <?php echo str_repeat("<img src='img/sao.png' alt=''>", $item['star']) ?>

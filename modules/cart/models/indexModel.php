@@ -1,9 +1,8 @@
 <?php
-function add_cart($id, $num_order)
+function add_cart($id_color,$quantity)
 {
-    add_product_put_cart($id, $num_order);
-    get_list_buy_cart();
-    redirect("gio-hang.html");
+    add_product_put_cart($id_color, $quantity);
+    // get_list_buy_cart();
 }
 function delete_cart($id)
 {

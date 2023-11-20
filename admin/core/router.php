@@ -8,7 +8,7 @@ if (!isset($_SESSION['is_admin_login']) && get_action() != "login") {
     } else {
         echo "Không tồn tại {$path}";
     }
-    $action = get_action() . "Action";
+    $action = get_action() . "Action"; //list_orderAction
     construct();
     call_function(array($action));
 }
