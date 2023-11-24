@@ -42,7 +42,7 @@ function add_product_put_cart($id_color, $qty) //Thêm vào giỏ hàng
         $_SESSION['cart']['buy'][$id_color] = [
             'product_id' => $item['product_id'],
             'ram_id' => $item['ram_id'],
-            'color_id' => $item['id'],
+            'color_id' => $id_color,
             'product_code' => $item['product_code'],
             'product_name' => $item['product_name'] . " " . $item['ram_name'] . " " . $item['color_name'],
             'price' => $item['price'] + $item['color_price'],

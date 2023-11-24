@@ -16,7 +16,30 @@ function add_cartAction()
     $id_ram = $_POST['id_ram'];
     $quantity = $_POST['quantity'];
     add_cart($id_color, $quantity);
-    echo json_encode($id_color);
+    $string_cart = "";
+    foreach ($_SESSION['cart']['buy'] as $item) {
+        $string_cart .= "<div class='cartmini__widget-item'>" .
+            "<div class='cartmini__thumb'>" .
+            "<a href='product-details.html'>" .
+            "<img src='admin/img/" . $item['product_thumb'] . "' alt=''>" .
+            "</a>" .
+            "</div>" .
+            "<div class='cartmini__content'>" .
+            "<h5 class='cartmini__title'><a href='product-details.html'>" . $item['product_name'] . "</a></h5>" .
+            "<div class='cartmini__price-wrapper'>" .
+            "<span class='cartmini__price'>" . currency_format($item['price']) . "</span>" .
+            "<span class='cartmini__quantity'>x" . $item['qty'] . "</span>" .
+            "</div>" .
+            "</div>" .
+            "<a href='#' class='cartmini__del'><i class='fa-regular fa-xmark'></i></a>" .
+            "</div>";
+    }
+    $data = [
+        'total_cart' => count($_SESSION['cart']['buy']),
+        'total' => $_SESSION['cart']['info']['total'],
+        'list_add_cart' => $string_cart,
+    ];
+    echo json_encode($data);
 }
 function deleteAction()
 {

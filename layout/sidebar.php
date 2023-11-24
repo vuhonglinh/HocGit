@@ -12,14 +12,14 @@ function has_child($data, $id)
 function render_menu($data, $parent_id = 0)
 {
     if ($parent_id == 0) {
-        $result = "<ul class='list-item list-unstyled'>";
+        $result = "<ul>";
     } else {
-        $result = "<ul class='sub-menu'>";
+        $result = "  <ul class='tp-submenu'>";
     }
     foreach ($data as $value) {
         if ($value['parent_id'] == $parent_id) {
-            $result .= "<li>";
-            $result .=  "<a href='{$value['url']}' class='list-group-item list-group-item-action'>{$value['name']}</a>";
+            $result .= "<li class='has-dropdown'>";
+            $result .=  "<a href='{$value['url']}'>{$value['name']}</a>";
             if (has_child($data, $value['id'])) {
                 $result .= render_menu($data, $value['id']);
             }

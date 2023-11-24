@@ -1,7 +1,7 @@
 <?php
 function get_product_by_id($id) //Lấy chi tiết sản phẩm
 {
-    $sql = db_fetch_row("SELECT * FROM `tb_products` WHERE `product_id` = {$id}");
+    $sql = db_fetch_row("SELECT * FROM `tb_products` INNER JOIN `tb_category` ON tb_products.cat_id = tb_category.id WHERE `product_id` = {$id}");
     return $sql;
 }
 function get_padding($num_rows)

@@ -18,22 +18,7 @@ function nextBtn(event) {
     var target = event.target;
 }
 
-function minus() {
-    let v = document.getElementById('num-order').value;
-    v = Number(v);
-    if (v > 1) {
-        document.getElementById('num-order').value = v - 1;
-    }
-}
-function plus() {
-    let v = document.getElementById('num-order').value;
-    let max = document.getElementById('quantity').innerText;
-    v = Number(v);
-    max = Number(max);
-    if (v < max) {
-        document.getElementById('num-order').value = v + 1;
-    }
-}
+
 
 var element = document.getElementById("slick-slider");
 

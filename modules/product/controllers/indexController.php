@@ -31,22 +31,21 @@ function detail_ajaxAction() //Ram sản phẩm
     $product_id = $_POST['product_id']; //id sản phẩm
     $ram_id = $_POST['ram']; //id thuộc tính ram
     $list_color = get_list_color_variant_by_ram_id($ram_id); //Lấy danh sách biến thể màu sắc theo ram id
-    $string = "<span class='ram'>Màu sắc: </span>";
+    $string = "";
     foreach ($list_color as $item) {
         if ($item['quantity'] < 1) {
             $disabled = "disabled";
-            $img = "<img class=' img-fluid' src='img/out-of-stock.png' alt=''>";
         } else {
             $disabled = "";
-            $img = "";
         }
         $string .= "
         <input onchange='selectColorVar(this)' type='radio' " . $disabled . " class='color-radio' id='color" . $item['id'] . "' name='color' value='" . $item['id'] . "'>
-        <label for='color" . $item['id'] . "' class='color-label text-center' style='background-color: " . $item['color'] . ";'>" . $img . "</label>";
+        <label for='color" . $item['id'] . "' class='color-label text-center' style='background-color: " . $item['color'] . ";'></label>";
     }
-    $string .= `</div>`;
-    echo json_encode($string);
+
+    echo $string;
 }
+
 
 function detail_color_ajaxAction()
 {
@@ -110,15 +109,15 @@ function detailAction()
     $data['star_1'] = num_product_star_1($id);
     //
     $data['star'] = product_star_by_id($id); //Lấy tb đánh giá sao
-    $data['count'] = total_comments($id); //Lấy tông số bình luận và đánh giá sp
+    $data['count_evaluate'] = total_comments($id); //Lấy tông số bình luận và đánh giá sp
     $data['product'] = get_product_by_id($id); //Lấy chi tiết sản phẩm
     $data['list_img_detail'] = get_img_detail_by_id($id); //Lấy chi tiết sản phẩm
     $data['comments'] = get_list_comments($id);
-    //Share sản phẩm
-    // $data['product_share'] = [
-    //     'url' =>  base_url("san-pham/chi-tiet/" . create_slug($data['product']['product_name']) . "/" . $id . ".html"),
-    //     'img' => 'anhdienthoaij.jpg',
-    // ];
+    // Share sản phẩm
+    $data['product_share'] = [
+        'url' =>  base_url("san-pham/chi-tiet/" . create_slug($data['product']['product_name']) . "/" . $id . ".html"),
+        'img' => 'anhdienthoaij.jpg',
+    ];
     load_view('detail', $data);
 }
 function add_cartAction()
