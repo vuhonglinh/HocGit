@@ -12,6 +12,7 @@ function cart_info()
         return $_SESSION['cart']['info'];
     }
 }
+
 function get_cart_by_id($id_color) //Lấy sản phẩm qua id
 {
     $sql = db_fetch_row("SELECT * FROM `tb_color_variants` INNER JOIN `tb_products` ON tb_color_variants.product_id = tb_products.product_id
@@ -19,20 +20,31 @@ function get_cart_by_id($id_color) //Lấy sản phẩm qua id
     return $sql;
 }
 
+function get_product_promotion($id) //Lấy giá khuyễn mãi theo id sản phẩm
+{
+    $sql = db_fetch_row("SELECT * FROM `product_promotion` INNER JOIN `tb_promotions` ON product_promotion.promotion_id = tb_promotions.id 
+    INNER JOIN `tb_products` ON product_promotion.product_id = tb_products.product_id WHERE tb_products.product_id = {$id}");
+    if (!$sql) {
+        return false;
+    }
+    return $sql['discount_rate'];
+}
+
+
 function add_product_put_cart($id_color, $qty) //Thêm vào giỏ hàng 
 {
     $item = get_cart_by_id($id_color);
-    if (empty($qty)) {
-        $qty = 1;
+    $promotion = get_product_promotion($item['product_id']);
+    if (!$promotion) {
+        $promotion = 0;
     }
-    // //TRừ sản phẩm trong Database khi mua hàng
-    // $quantity = $item['quantity']; //Số sản phẩm trong giỏ hàng
-    // $total_product = $quantity - $qty;
-    // $data_quantity = [
-    //     'quantity' => $total_product,
-    // ];
-    // db_update("tb_products", $data_quantity, "`product_id` = $id");
-    // //
+    //TRừ sản phẩm trong Database khi mua hàng
+    $quantity = $item['quantity']; //Số sản phẩm trong giỏ hàng
+    $total_product = $quantity - $qty;
+    $data_quantity = [
+        'quantity' => $total_product,
+    ];
+    db_update("tb_color_variants", $data_quantity, "`id` = $id_color");
     // Nếu sản phẩm đã tồn tại trong giỏ hàng, tăng số lượng
     if (isset($_SESSION['cart']['buy']) && array_key_exists($id_color, $_SESSION['cart']['buy'])) {
         $_SESSION['cart']['buy'][$id_color]['qty'] += $qty;
@@ -42,13 +54,13 @@ function add_product_put_cart($id_color, $qty) //Thêm vào giỏ hàng
         $_SESSION['cart']['buy'][$id_color] = [
             'product_id' => $item['product_id'],
             'ram_id' => $item['ram_id'],
-            'color_id' => $item['id'],
+            'color_id' => $id_color,
             'product_code' => $item['product_code'],
             'product_name' => $item['product_name'] . " " . $item['ram_name'] . " " . $item['color_name'],
-            'price' => $item['price'] + $item['color_price'],
+            'price' => $item['price'] + $item['color_price'] - ($item['price'] * ($promotion / 100)),
             'product_thumb' => $item['product_thumb'],
             'qty' => $qty,
-            'sub_total' => ($item['price'] + $item['color_price']) * $qty,
+            'sub_total' => ($item['price'] + $item['color_price'] - ($item['price'] * ($promotion / 100))) * $qty,
         ];
     }
     update_cart();

@@ -1,7 +1,7 @@
 <?php
 function get_product_by_id($id) //Lấy chi tiết sản phẩm
 {
-    $sql = db_fetch_row("SELECT * FROM `tb_products` WHERE `product_id` = {$id}");
+    $sql = db_fetch_row("SELECT * FROM `tb_products` INNER JOIN `tb_category` ON tb_products.cat_id = tb_category.id WHERE `product_id` = {$id}");
     return $sql;
 }
 function get_padding($num_rows)
@@ -15,7 +15,11 @@ function get_padding($num_rows)
     $padding .= "</ul>";
     return $padding;
 }
-
+function list_products_by_sales() //Lấy danh sách sản phẩm bán chạy
+{
+    $sql = db_fetch_array("SELECT * FROM `tb_products` WHERE `status` = 'Đã đăng' ORDER BY `sales` DESC LIMIT 0, 10 ");
+    return $sql;
+}
 function total_product_by_cat_id($cat_id)
 {
     $sql = db_num_rows("SELECT * FROM `tb_products` WHERE `cat_id` = '{$cat_id}' AND `status` = 'Đã đăng'");
@@ -164,4 +168,13 @@ function get_color_variant($color_id) //Lấy ra màu sắc theo id màu sắc
      INNER JOIN `tb_ram_variants` ON tb_color_variants.ram_id = tb_ram_variants.id 
      WHERE tb_color_variants.id = {$color_id}");
     return $sql;
+}
+function get_product_promotion_by_id($id) //Lấy giá khuyễn mãi theo id sản phẩm
+{
+    $sql = db_fetch_row("SELECT * FROM `product_promotion` INNER JOIN `tb_promotions` ON product_promotion.promotion_id = tb_promotions.id 
+    INNER JOIN `tb_products` ON product_promotion.product_id = tb_products.product_id WHERE tb_products.product_id = {$id}");
+    if (!$sql) {
+        return false;
+    }
+    return $sql['discount_rate'];
 }

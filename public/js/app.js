@@ -1,94 +1,159 @@
+function add_cart(event) {
+    event.preventDefault();
+    var product_id = $("#ram").attr("product_id");
+    var id_ram = $("#ram").val();
+    var id_color = $("input[name='color']:checked").val();
+    var quantity = $("#num-order").val();
 
+    if (id_color == null) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Chú ý',
+            text: 'Vui lòng chọn đầy đủ thông tin của sản phẩm trước khi đặt mua!',
+            showConfirmButton: false,
+            timer: 2000
+        });
+        return false;
+    }
 
+    var data = {
+        product_id: product_id,
+        id_color: id_color,
+        id_ram: id_ram,
+        quantity: quantity,
+    };
 
-
-
-function addCart(event) {//Thêm vào giỏ hàng
-    var id = event.currentTarget.getAttribute("id_product");
-    var data = { id: id };
-    $("#comment").val("");
     $.ajax({
-        url: '?mod=home&action=ajax',
+        url: '?mod=cart&action=add_cart',
         method: 'POST',
         data: data,
         dataType: 'json',
-        success: function (data) {
-            $('#menu-total-cart').html(data.count)
-            var array = Object.entries(data.list_add);
-            var totalString = "";
-            array.forEach(element => {
-                var string = "<div class='media border-bottom'>" +
-                    "<a href=''>" +
-                    "<img src='admin/img/" + element[1].product_thumb + "' class='img-fluid img-thumbnail border-0 mr-3' style='height: 80px;' alt=''>" +
-                    "</a>" +
-                    "<div class='media-body'>" +
-                    "<a class='text-decoration-none' id='mane-product' href=''>" + element[1].product_name + "</a>" +
-                    "<div class='d-flex'>" +
-                    "<p class='text-danger float-left' style='font-size: 12px;'>" + element[1].price + "</p>" +
-                    "</div>" +
-                    "</div>" +
-                    "<p class='text-black-50'>Số lượng X " + element[1].qty + "</p>" +
-                    "</div>";
-                totalString += string;
-            });
-            $('#list_add_cart').html(totalString);
-            alert("Đã thêm vào giỏ hàng")
+        success: function (response) {
+
+            // Cập nhật giao diện người dùng sau khi thêm vào giỏ hàng
+            $("#menu_total_cart").html(response.total_cart);
+            $("#menu_total_cart_sm").html(response.total_cart);
+            $("#total_price_cart").html(response.total);
+            $("#list_add_cart").html(response.list_add_cart);
+            $("#quantity_product").html("<span>Trong kho</span>");
+            $("#status").html("");
+            // Gọi hàm cập nhật UI và chuyển response vào
+            updateUI(response);
+        },
+        error: function (error) {
+            console.log('Error:', error);
         }
-    })
+    });
+}
+
+function updateUI(response) {
+    // Sau khi thêm vào giỏ hàng
+    Swal.fire({
+        icon: 'success',
+        title: 'Đã thêm vào giỏ hàng!',
+        text: 'Sản phẩm đã được thêm vào giỏ hàng của bạn.',
+        showConfirmButton: false, // Không hiển thị nút xác nhận
+        timer: 1000 // Tự động đóng sau 2 giây
+    });
+    selectVar();
+    selectColorVar(_this);
 }
 
 
 
-$(document).ready(function () {//Thêm bình luận
-    $('#add-comment').click(function (e) {
-        e.preventDefault();
-        var comment = $('#comment').val();
-        if (comment == "") {
-            return false;
+function selectColorVar(_this) {
+    var color_id = $(_this).val();
+    var data = {
+        color_id: color_id,
+    }
+    $.ajax({
+        url: '?mod=product&action=detail_color_ajax',
+        method: 'POST',
+        data: data,
+        dataType: 'json',
+        success: function (data) {
+            console.log(data);
+            $("#product_name").html(data.product_name);
+            $("#quantity_product").html(`<span>Còn ` + data.quantity + ` sản phẩm</span>`);
+            $("#product_price").html(data.price);
+            $("#status").html(
+                `<input type="number" name="num-order" id="num-order" min="1" max="` + data.quantity + `" value="1" id="num-order">`);
         }
-        var id_product = $('#comment').attr('id_product');
-        var star = $("input[name='star']").filter(":checked").val()
-        var formData = { comment: comment, id_product: id_product, star: star }
-        $.ajax({
-            url: '?mod=product&action=ajax',
-            method: 'POST',
-            data: formData,
-            dataType: 'json',
-            success: function (data) {
-                var result = "";
-                data.forEach(element => {
-                    if (element.img == "") {
-                        img_user = "img/user.png";
-                    } else {
-                        img_user = "admin/img/"+element.img;
-                    }
-                    var img = "";
-                    for (let i = 1; i <= element.star; i++) {
-                        img += "<img src='img/sao.png' alt=''>";
-                    }
-                    string = "<div id='item-comment'>" +
-                        "<div id='header-comment'>" +
-                        "<img id='img-user-comment' class='box rounded-circle' src='" + img_user + "' alt=''>" +
-                        "<h6 class='mt-2 ml-1'>" + element.fullname + "</h6>" +
-                        "</div>" +
-                        "<div>" + img +
-                        "</div>" +
-                        "<div>" +
-                        "<p>" + element.comment_content + "</p>" +
-                        "</div>" +
-                        "<div>" +
-                        " <img src='img/oclock.png' alt=''><span class='text-black-50'>" + element.time + "</span>" +
-                        "</div>" +
-                        "</div>";
-                    result += string;
-                });
-                $('#list_comment').html(result);
-                $("#comment").val("");
-                $("input[name='star']").prop("checked", false)
-            }
-        })
-    });
-});
+    })
+}
+
+function selectVar() {
+    var product_id = $("#ram").attr("product_id");
+    var ram = $("#ram").val();
+    var data = {
+        product_id: product_id,
+        ram: ram,
+    }
+    $.ajax({
+        url: '?mod=product&action=detail_ajax',
+        method: 'POST',
+        data: data,
+        dataType: 'html',
+        success: function (data) {
+            $("#color_var").html(data);
+        }
+    })
+}
+selectVar();
+
+function add_comment(event) {//Thêm bình luận
+    event.preventDefault();
+    var comment = $('#comment').val();
+    if (comment == "") {
+        return false;
+    }
+    var id_product = $('#comment').attr('id_product');
+    var star = $("input[name='star']").filter(":checked").val()
+    var formData = { comment: comment, id_product: id_product, star: star }
+    $.ajax({
+        url: '?mod=product&action=ajax',
+        method: 'POST',
+        data: formData,
+        dataType: 'json',
+        success: function (data) {
+            console.log(data);
+            var result = "";
+            data.forEach(element => {
+                if (element.img == "") {
+                    img_user = "img/user.png";
+                } else {
+                    img_user = "admin/img/" + element.img;
+                }
+                var img = "";
+                for (let i = 1; i <= element.star; i++) {
+                    img += "<span><i class='fa-solid fa-star'></i></span>";
+                }
+                string = "<div class='tp-product-details-review-avater d-flex align-items-start'>" +
+                    "<div class='tp-product-details-review-avater-thumb'>" +
+                    "<a href='#'>" +
+                    "<img src='" + img_user + "' alt=''>" +
+                    "</a>" +
+                    "</div>" +
+                    "<div class='tp-product-details-review-avater-content'>" +
+                    "<div class='tp-product-details-review-avater-rating d-flex align-items-center'>" +
+                    " " + img + " " +
+                    "</div>" +
+                    "<h3 class='tp-product-details-review-avater-title'>" + element.fullname + "</h3>" +
+                    "<span class='tp-product-details-review-avater-meta'>" + element.time + "</span>" +
+
+                    "<div class='tp-product-details-review-avater-comment'>" +
+                    "<p>" + element.comment_content + "</p>" +
+                    "</div>" +
+                    "</div>" +
+                    "</div>";
+                result += string
+            });
+            $('#list_comment').html(result);
+            $("#comment").val("");
+            $("input[name='star']").prop("checked", false)
+        }
+    })
+}
 
 
 function uploadImage(event) {

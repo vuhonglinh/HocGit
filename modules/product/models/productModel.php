@@ -82,3 +82,14 @@ function get_padding($num_rows)
     $padding .= "</ul>";
     return $padding;
 }
+
+function list_products_by_sales()//Lấy danh sách sản phẩm bán chạy
+{
+    $sql = db_fetch_array("SELECT * FROM `tb_products` WHERE `status` = 'Đã đăng' ORDER BY `sales` DESC LIMIT 0, 10 ");
+    return $sql;
+}
+function product_star_by_id($id) //Lấy trung binh đánh giá khách hàng
+{
+    $sql = db_fetch_row("SELECT AVG(`star`) as 'star' FROM `tb_comments` WHERE `id_product` = {$id} AND `star` > 1");
+    return $sql;
+}
