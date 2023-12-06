@@ -44,6 +44,7 @@ get_sidebar();
                             <th>Gía cơ bản</th>
                             <th>Danh mục</th>
                             <th>Trạng thái</th>
+                            <th>Số lượt bán</th>
                             <th>Người xóa</th>
                             <th>Thời gian xóa</th>
                             <th>Thao tác</th>
@@ -66,6 +67,7 @@ get_sidebar();
                                     <td><?php echo currency_format($item['price']); ?></td>
                                     <td><?php echo $item['title'] ?></td>
                                     <td><?php echo $item['status'] ?></td>
+                                    <td><?php echo $item['sales'] ?></td>
                                     <td><?php echo $item['admin_delete'] ?></td>
                                     <td><?php echo $item['date_delete'] ?></td>
                                     <td class="text-center">

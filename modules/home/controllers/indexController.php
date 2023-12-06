@@ -17,7 +17,6 @@ function indexAction()
     //Danh sách laptops
     $data['list_products_laptop'] = list_products_latop();
     load_view("home", $data);
-    show_array($_SESSION['cart']['buy']);
 }
 
 function ajaxAction()

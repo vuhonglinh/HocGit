@@ -69,6 +69,29 @@
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-table"></i>
                         <p>
+                            Quản lý đơn vị vận chuyển
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="?mod=shipping&action=list_shipping" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Danh sách đơn vị vận chuyển</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="?mod=post&action=add_post" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Thêm đơn vận chuyển</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-table"></i>
+                        <p>
                             Quản lý menu
                             <i class="fas fa-angle-left right"></i>
                         </p>

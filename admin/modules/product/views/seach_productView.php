@@ -13,7 +13,6 @@ get_sidebar();
             <li class="breadcrumb-item"><a href="?mod=product&action=list_product&status=Đã đăng" class="text-decoration-none">Đã đăng(<?php echo $num_products_posted ?>)</a></li>
             <li class="breadcrumb-item"><a href="?mod=product&action=list_product&status=Chờ xét duyệt" class="text-decoration-none">Chờ xét duyệt(<?php echo $num_products_pending ?>)</a>
             </li>
-            <li class="breadcrumb-item"><a href="?mod=product&controller=delete&action=list_product_delete" class="text-decoration-none">Thùng rác(<?php echo $num_product_delete ?>)</a></li>
             <?php if (!empty($list_cat)) :
                 foreach ($list_cat as $item) :
             ?>
@@ -67,7 +66,7 @@ get_sidebar();
                                     <td class="list-inline">
                                         <a href="?mod=product&action=update_product&id=<?php echo $item['product_id'] ?>" title="Sửa"><img src="public/img/pen (1).png" alt=""></a>
                                         <a onclick="return confirm('Bạn chắc muốn xóa sản phẩm không')" href="?mod=product&action=delete_product&id=<?php echo $item['product_id'] ?>" title="Xóa"><img src="public/img/delete1.png" alt=""></a>
-                                    </td>             
+                                    </td>
                                     <td class="text-danger"><?php echo currency_format($item['price']); ?></td>
                                     <td><?php echo $item['title'] ?></td>
                                     <td><?php echo $item['status'] ?></td>

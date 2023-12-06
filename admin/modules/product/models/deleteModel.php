@@ -80,7 +80,7 @@ function reset_product($id) //Khôi phục sản phẩm
         'product_content' => $item['product_content'],
         'status' => "Chờ xét duyệt",
         'cat_id' => $item['cat_id'],
-        'creator' => $_SESSION['admin_login'],
+        'creator' => $_SESSION['user_login'],
         'sales' => $item['sales'],
         'quantity' => $item['quantity'],
     ];
@@ -111,7 +111,7 @@ function update_action($action, $id) //Cập nhật tác vụ danh sách xóa s�
             'product_content' => $item['product_content'],
             'status' => "Chờ xét duyệt",
             'cat_id' => $item['cat_id'],
-            'creator' => $_SESSION['admin_login'],
+            'creator' => $_SESSION['user_login'],
             'star' => $item['star'],
             'quantity' => $item['quantity'],
         ];

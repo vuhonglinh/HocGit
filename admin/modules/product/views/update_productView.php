@@ -63,84 +63,70 @@ get_sidebar();
                         ?>
                     </div>
                     <?php echo form_error('images') ?>
-                    <label class="font-weight-bold h4">Biến thể màu sắc</label>
-                    <a href="javascript:void(0)" class="btn btn-sm btn-primary" onclick="create()">Add</a>
-                    <div id="color">
-                        <?php
-                        $count_color = 0;
-                        foreach ($list_color_var as $item) :
-                            $count_color++;
-                        ?>
-                            <div id="item-color" class="form-row justify-content-center align-items-center">
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="name_color_var">Tên thuộc tính màu sắc</label>
-                                        <input type="text" value="<?php echo $item['color_name'] ?>" class="form-control" id="name_color_var" name="available_color[<?php echo $item['id']; ?>][name]" id="username">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="price_color_var">Gía biến thể</label>
-                                        <input type="number" value="<?php echo $item['color_price'] ?>" class="form-control" id="price_color_var" name="available_color[<?php echo $item['id']; ?>][price]">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="qty_color_var">Số lượng</label>
-                                        <input type="number" value="<?php echo $item['quantity'] ?>" class="form-control" id="qty_color_var" name="available_color[<?php echo $item['id']; ?>][qty]">
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="color_var">Màu</label>
-                                        <input type="color" value="<?php echo $item['color'] ?>" class="form-control" id="color_var" name="available_color[<?php echo $item['id']; ?>][color]">
-                                    </div>
-                                </div>
-                                <div class="col-md-1">
-                                    <?php if ($count_color > 1) : ?>
-                                        <a href="javascript:void(0)" class="btn btn-danger" onclick="delete_(this)">Xóa</a>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                    <?php echo form_error('data_color') ?>
-                    <label class="font-weight-bold h4">Biến thể Ram</label>
-                    <a href="javascript:void(0)" class="btn btn-sm  btn-primary" onclick="create1()">Add</a>
-                    <div id="ram">
-                        <?php
-                        $count_ram = 0;
+
+                    <label for="">Biến thể Ram</label>
+                    <?php if (!empty($list_ram_var)) :
                         foreach ($list_ram_var as $item) :
-                            $count_ram++;
-                        ?>
-                            <div id="item-ram" class="form-row justify-content-center align-items-center">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="name_ram_var">Tên thuộc tính ram</label>
-                                        <input type="text" value="<?php echo $item['nemory_name'] ?>" class="form-control" id="name_ram_var" name="available_ram[<?php echo $item['id']; ?>][name]">
+                    ?>
+                            <div id="ram_update_<?php echo $item['id'] ?>" class="border p-3 bg-info my-3">
+                                <div id="item-ram" class="form-row justify-content-center align-items-center">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="name_ram_var">Tên thuộc tính ram</label>
+                                            <input type="text" class="form-control" id="name_ram_var" value="<?php echo $item['ram_name'] ?>" name="update_ram_variants[<?php echo $item['id'] ?>][name]">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="price_ram_var">Gía biến thể</label>
-                                        <input type="number" value="<?php echo $item['nemory_price'] ?>" class="form-control" id="price_ram_var" name="available_ram[<?php echo $item['id']; ?>][price]">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="qty_ram_var">Số lượng</label>
-                                        <input type="number" value="<?php echo $item['quantity'] ?>" class="form-control" id="qty_ram_var" name="available_ram[<?php echo $item['id']; ?>][qty]">
-                                    </div>
-                                </div>
-                                <div class="col-md-1">
-                                    <?php if ($count_ram > 1) : ?>
-                                        <a href="javascript:void(0)" class="btn btn-danger" onclick="delete1_(this)">Xóa</a>
-                                    <?php endif; ?>
+                                <a href="javascript:void(0)" class="btn btn-sm btn-danger float-right" onclick="removeRamVariantUpdate(<?php echo $item['id'] ?>)">Xóa</a>
+                                <a href="javascript:void(0)" class="btn btn-sm btn-primary" onclick="addColorVariantUpdate(<?php echo $item['id'] ?>)">Add màu sắc</a>
+                                <div class="colorVariants">
+                                    <?php if (!empty(get_color_variants($item['id']))) :
+                                        foreach (get_color_variants($item['id']) as $value) :
+                                    ?>
+                                            <div id="color">
+                                                <div id="item-color" class="form-row justify-content-center align-items-center">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="name_color_var">Tên màu sắc</label>
+                                                            <input type="text" class="form-control" value="<?php echo $value['color_name'] ?>" id="name_color_var" name="update_ram_variants[<?php echo $item['id'] ?>][colors][<?php echo $value['id'] ?>][name]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="price_color_var">Giá</label>
+                                                            <input type="number" class="form-control" value="<?php echo $value['color_price'] ?>" id="price_color_var" name="update_ram_variants[<?php echo $item['id'] ?>][colors][<?php echo $value['id'] ?>][price]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="qty_color_var">Số lượng</label>
+                                                            <input type="number" class="form-control" value="<?php echo $value['quantity'] ?>" id="qty_color_var" name="update_ram_variants[<?php echo $item['id'] ?>][colors][<?php echo $value['id'] ?>][qty]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <label for="color_var">Màu</label>
+                                                            <input type="color" class="form-control" value="<?php echo $value['color'] ?>" id="color_var" name="update_ram_variants[<?php echo $item['id'] ?>][colors][<?php echo $value['id'] ?>][color]">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <a href="javascript:void(0)" class="btn btn-sm btn-danger float-right" onclick="delete_(this)">Xóa</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    <?php endforeach;
+                                    endif; ?>
                                 </div>
                             </div>
-                        <?php endforeach; ?>
-                    </div>
-                    <?php echo form_error('data_ram') ?>
+                    <?php endforeach;
+                    endif; ?>
+                    <a href="javascript:void(0)" class="btn btn-sm btn-primary" onclick="addRamVariant()">Thêm Biến Thể Ram</a>
+                    <div id="ramVariants">
+                        <!-- Biến thể được thêm vào đây -->
+                    </div><br>
+                    <?php echo form_error('variants') ?>
+
+
 
                     <label>Danh mục sản phẩm</label>
                     <select name="parent_id" class="form-inline form-control">

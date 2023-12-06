@@ -35,7 +35,7 @@ get_sidebar();
 
                             <h3 class="profile-username text-center"><?php echo info_login() ?></h3>
 
-                            <p class="text-muted text-center">Quản trị viên</p>
+                            <p class="text-muted text-center"><?php echo $info_user['role_name'] ?></p>
 
                             <ul class="list-group list-group-unbordered mb-3">
                                 <li class="list-group-item">
@@ -84,6 +84,15 @@ get_sidebar();
                             <label for="address">Địa chỉ</label>
                             <textarea name="address" id="address" class="form-inline form-control"><?php echo set_value('address') ?></textarea>
                             <?php echo form_error('address') ?>
+
+                            <label for="role">Phòng ban</label>
+                            <select class="form-control" name="role" id="role">
+                                <option value="">---Chọn---</option>
+                                <?php foreach ($list_roles as  $value) : ?>
+                                    <option <?php echo ($value['id'] == 0) ? "disabled" : "" ?> value="<?php echo $value['id'] ?>"><?php echo $value['role_name'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php echo form_error('role') ?>
 
                             <button type="submit" name="btn-add" id="btn-submit" class="btn btn-primary btn-lg mt-3">Thêm</button>
                             <?php echo form_error('account') ?>

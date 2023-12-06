@@ -9,15 +9,16 @@ function add_product_data($data) //Thêm sản phẩm
     return db_insert("tb_products", $data);
 }
 
-function add_variants_color($data) //Thêm thuộc tính màu sắc
+function add_color_vartians($data_color) //Thêm biến thể màu sắc
 {
-    db_insert("tb_color_variants", $data);
+    db_insert("tb_color_variants", $data_color);
 }
 
 
-function add_variants_ram($data) //Thêm thuộc tính ram
+function add_ram_vartians($data_ram) //Thêm thuộc tính ram
 {
-    db_insert("tb_memory_variants", $data);
+    $sql = db_insert("tb_ram_variants", $data_ram);
+    return $sql;
 }
 
 function list_category() //Danh mục sản phẩm
@@ -83,7 +84,13 @@ function get_padding($num_rows)
 function delete_product($id) //Xóa sản phẩm theo id
 {
     db_delete("tb_products", "`product_id` = '$id'");
-    redirect("?mod=product&action=list_product");
+}
+
+function delete_related($id) //Xóa các thuộc tính liên quan đến sản phẩm theo id
+{
+    db_delete("tb_color_variants", "`product_id` = '$id'"); //Xóa biến thể màu sắc
+    db_delete("tb_memory_variants", "`product_id` = '$id'"); //Xóa biến thể dung lượng
+    db_delete("tb_image_details", "`product_id` = '$id'"); //Xóa ảnh chi tiết
 }
 
 function get_product_by_id($id) //Lấy sản phẩm theo id
@@ -149,29 +156,6 @@ function num_products_posted() //Tổng số sản phẩm đã đăng
 function num_products_pending() //Tổng số sản phẩm chờ xét duyệt
 {
     return db_num_rows("SELECT * FROM `tb_products` WHERE `status`= 'Chờ xét duyệt'");
-}
-function num_product_delete() //Tổng số sản phẩm trong danh sach đã xóa
-{
-    return db_num_rows("SELECT * FROM `tb_deleted_products`");
-}
-function add_list_delete($id) //Cập nhật vào danh sách sản phẩm đã xóa
-{
-    $item = db_fetch_row("SELECT * FROM `tb_products` WHERE `product_id` = '$id' ");
-    $data = [
-        'product_id'  => $item['product_id'],
-        'product_code' => $item['product_code'],
-        'product_name' => $item['product_name'],
-        'price' => $item['price'],
-        'product_desc' => $item['product_desc'],
-        'product_thumb' => $item['product_thumb'],
-        'product_content' => $item['product_content'],
-        'status' => "Chờ xét duyệt",
-        'cat_id' => $item['cat_id'],
-        'admin_delete' => $_SESSION['admin_login'],
-        'sales' => $item['sales'],
-        'quantity' => $item['quantity'],
-    ];
-    db_insert("tb_deleted_products", $data);
 }
 
 function get_list_cat() //Lấy danh sách danh mục sản phẩm 
@@ -268,31 +252,54 @@ function num_list_products_by_cat($cat_id)
 
 function get_color_variants($id) //Lấy thuộc tính màu sắc của sản phẩm
 {
-    $sql = db_fetch_array("SELECT * FROM `tb_color_variants` WHERE `product_id` = {$id}");
+    $sql = db_fetch_array("SELECT * FROM `tb_color_variants` WHERE `ram_id` = {$id}");
     return $sql;
 }
 
 function get_ram_variants($id) //Lấy thuộc tính ram của sản phẩm
 {
-    $sql = db_fetch_array("SELECT * FROM `tb_memory_variants` WHERE `product_id` = {$id}");
+    $sql = db_fetch_array("SELECT * FROM `tb_ram_variants` WHERE `product_id` = {$id}");
     return $sql;
 }
 
 function update_variants_ram($data_available_ram, $id) //Update thuộc tính ram của sản phẩm
 {
-    db_update("tb_memory_variants", $data_available_ram, "`id` = {$id}");
+    db_update("tb_color_variants", $data_available_ram, "`id` = {$id}");
 }
 
 
-function update_variants_color($data_available_color, $id) //Update thuộc tính ram của sản phẩm
+function  update_variants_color($data_update_color, $id) //Cập nhật biến thể màu sắc theo id
 {
-    db_update("tb_color_variants", $data_available_color, "`id` = {$id}");
+    db_update("tb_color_variants", $data_update_color, "`id` = {$id}");
 }
 
 
-function  remove_interval_variation($table, $key_string, $id) //Xóa các biến thể màu sắc không có trong danh sách id
+function delete_variant_color_isset_by_id($table, $string_id, $ram_id, $id) //Xóa danh sach id ram không tồn tại
 {
-    db_query("DELETE FROM `$table` WHERE id NOT IN ($key_string) AND `product_id` = {$id}");
+    db_query("DELETE FROM `$table` WHERE id NOT IN ($string_id) AND `product_id` = {$id} AND `ram_id` = {$ram_id}");
+    // echo "DELETE FROM `$table` WHERE id NOT IN ($string_id) AND `product_id` = {$id} AND `ram_id` = {$ram_id}";
+}
+
+function delete_variant_isset_by_id($table, $string_id, $id) //Xóa danh sach id ram không tồn tại
+{
+    db_query("DELETE FROM `$table` WHERE id NOT IN ($string_id) AND `product_id` = {$id}");
+}
+
+
+function delete_all_variant_color($ram_id) //Xóa toàn bộ biến thể màu theo ram_id
+{
+    db_delete("tb_color_variants", "`ram_id` = {$ram_id}");
+}
+
+function delete_all_variant_ram($product_id) //Xóa toàn bộ thuộc tính của sản phẩm theo product_id
+{
+    db_delete("tb_ram_variants", "`product_id` = {$product_id}");
+    db_delete("tb_color_variants", "`product_id` = {$product_id}");
+}
+
+function add_variants_color($data_add_color) //Thêm biến thể màu sắc theo id ram cũ
+{
+    db_insert("tb_color_variants", $data_add_color);
 }
 
 function update_detail_img_by_id($key, $data_detail_img) //Cập nhật ảnh chi tiết cảu sản phẩm theo id anh chi tiết
@@ -300,7 +307,7 @@ function update_detail_img_by_id($key, $data_detail_img) //Cập nhật ảnh ch
     db_update("tb_image_details", $data_detail_img, "`id` = {$key}");
 }
 
-function remove_interval_detail_img($string_id, $id)//Xóa các id ảnh chi tiết nếu không tồn tại trong danh sách
+function remove_interval_detail_img($string_id, $id) //Xóa các id ảnh chi tiết nếu không tồn tại trong danh sách
 {
     db_query("DELETE FROM `tb_image_details` WHERE `id` NOT IN ($string_id) AND `product_id` = {$id}");
 }
